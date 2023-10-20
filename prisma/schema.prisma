@@ -6,6 +6,138 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  CUSTOMER
+  SHOP
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHERS
+}
+
+model UserAccount {
+  id           Int    @id
+  email        String @unique
+  hashPassword String
+  saltPassword String
+  role         Role   @default(CUSTOMER)
+}
+
+model Customer {
+  id             Int       @id
+  name           String
+  imageUrl       String?
+  phoneNumber    String?
+  defaultAddress String?
+  gender         Gender?   @default(OTHERS)
+  birthday       DateTime? @default(now())
+  Cart           Cart[]
+  Order          Order[]
+}
+
+model Cart {
+  idCustomer Int
+  idFood     Int
+  idShop     Int
+  customer   Customer @relation(fields: [idCustomer], references: [id])
+  food       Food     @relation(fields: [idFood], references: [id])
+  shop       Shop     @relation(fields: [idShop], references: [id])
+
+  quantity Int
+
+  @@id([idFood, idCustomer, idShop])
+}
+
+model Shop {
+  id                 Int     @id
+  name               String
+  imageUrl           String?
+  backgroundImageUrl String?
+  phoneNumber        String?
+  defaultAddress     String?
+
+  Cart     Cart[]
+  Category Category[]
+  Order    Order[]
+}
+
+model Food {
+  id          Int     @id @default(autoincrement())
+  name        String
+  imageUrl    String?
+  description String?
+  price       BigInt
+
+  idFoodType Int?
+  foodType   FoodType? @relation(fields: [idFoodType], references: [id])
+
+  Cart         Cart[]
+  Category     Category[]
+  OrderDetails OrderDetails[]
+}
+
+model FoodType {
+  id   Int    @id @default(autoincrement())
+  type String @unique
+  Food Food[]
+}
+
+model FoodSize {
+  id       Int        @id @default(autoincrement())
+  size     String     @unique
+  Category Category[]
+}
+
+model Category {
+  id        Int      @id @default(autoincrement())
+  amount    Int
+  sellCount Int
+  dateAdded DateTime @default(now())
+
+  idShop     Int
+  idFood     Int
+  idFoodSize Int
+  shop       Shop     @relation(fields: [idShop], references: [id])
+  food       Food     @relation(fields: [idFood], references: [id])
+  foodSize   FoodSize @relation(fields: [idFoodSize], references: [id])
+}
+
+enum OrderStatus {
+  PENDING
+  CANCEL
+  ACCEPT
+  COMPLETE
+}
+
+model Order {
+  id                     Int         @id @default(autoincrement())
+  orderStatus            OrderStatus @default(PENDING)
+  createdAt              DateTime    @default(now())
+  timeDeliveryToCustomer DateTime?   @default(now())
+  totalCost              BigInt
+  noteFromShop           String?
+
+  idCustomer   Int
+  idShop       Int
+  customer     Customer       @relation(fields: [idCustomer], references: [id])
+  shop         Shop           @relation(fields: [idShop], references: [id])
+  OrderDetails OrderDetails[]
+}
+
+model OrderDetails {
+  quantity Int
+
+  idOrder Int
+  idFood  Int
+  order   Order @relation(fields: [idOrder], references: [id])
+  food    Food  @relation(fields: [idFood], references: [id])
+
+  @@id([idFood, idOrder])
 }
