@@ -23,11 +23,13 @@ enum Gender {
 }
 
 model UserAccount {
-  id           Int    @id
-  email        String @unique
+  id           Int        @id
+  email        String     @unique
   hashPassword String
   saltPassword String
-  role         Role   @default(CUSTOMER)
+  role         Role       @default(CUSTOMER)
+  Customer     Customer[]
+  Shop         Shop[]
 }
 
 model Customer {
@@ -38,8 +40,12 @@ model Customer {
   defaultAddress String?
   gender         Gender?   @default(OTHERS)
   birthday       DateTime? @default(now())
-  Cart           Cart[]
-  Order          Order[]
+
+  idUserAccount Int
+  userAccount   UserAccount @relation(fields: [idUserAccount], references: [id])
+
+  Cart  Cart[]
+  Order Order[]
 }
 
 model Cart {
@@ -62,6 +68,9 @@ model Shop {
   backgroundImageUrl String?
   phoneNumber        String?
   defaultAddress     String?
+
+  idUserAccount Int
+  userAccount   UserAccount @relation(fields: [idUserAccount], references: [id])
 
   Cart     Cart[]
   Category Category[]
