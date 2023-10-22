@@ -6,9 +6,9 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "seed": "npx ts-node prisma/seed.ts",
+    "seed": "npx ts-node --esm prisma/seed.ts",
     "compile": "tsc",
-    "start": "npm run compile && node ./dist/src/index.js"
+    "start": "npm run compile && nodemon ./dist/src/index.js"
   },
   "keywords": [],
   "author": "",
@@ -22,6 +22,7 @@
   "dependencies": {
     "@apollo/server": "^4.9.4",
     "@prisma/client": "^5.4.2",
-    "graphql": "^16.8.1"
+    "graphql": "^16.8.1",
+    "nodemon": "^3.0.1"
   }
 }
