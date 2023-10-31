@@ -23,7 +23,7 @@ enum Gender {
 }
 
 model UserAccount {
-  id           Int        @id
+  id           String     @id
   email        String     @unique
   hashPassword String
   saltPassword String
@@ -33,7 +33,7 @@ model UserAccount {
 }
 
 model Customer {
-  id             Int       @id
+  id             String    @id
   name           String
   imageUrl       String?
   phoneNumber    String?
@@ -41,7 +41,7 @@ model Customer {
   gender         Gender?   @default(OTHERS)
   birthday       DateTime? @default(now())
 
-  idUserAccount Int
+  idUserAccount String
   userAccount   UserAccount @relation(fields: [idUserAccount], references: [id])
 
   Cart  Cart[]
@@ -49,9 +49,9 @@ model Customer {
 }
 
 model Cart {
-  idCustomer Int
+  idCustomer String
   idFood     Int
-  idShop     Int
+  idShop     String
   customer   Customer @relation(fields: [idCustomer], references: [id])
   food       Food     @relation(fields: [idFood], references: [id])
   shop       Shop     @relation(fields: [idShop], references: [id])
@@ -62,14 +62,14 @@ model Cart {
 }
 
 model Shop {
-  id                 Int     @id
+  id                 String  @id
   name               String
   imageUrl           String?
   backgroundImageUrl String?
   phoneNumber        String?
   defaultAddress     String?
 
-  idUserAccount Int
+  idUserAccount String
   userAccount   UserAccount @relation(fields: [idUserAccount], references: [id])
 
   Cart     Cart[]
@@ -110,7 +110,7 @@ model Category {
   sellCount Int
   dateAdded DateTime @default(now())
 
-  idShop     Int
+  idShop     String
   idFood     Int
   idFoodSize Int
   shop       Shop     @relation(fields: [idShop], references: [id])
@@ -133,8 +133,8 @@ model Order {
   totalCost              BigInt
   noteFromShop           String?
 
-  idCustomer   Int
-  idShop       Int
+  idCustomer   String
+  idShop       String
   customer     Customer       @relation(fields: [idCustomer], references: [id])
   shop         Shop           @relation(fields: [idShop], references: [id])
   OrderDetails OrderDetails[]
