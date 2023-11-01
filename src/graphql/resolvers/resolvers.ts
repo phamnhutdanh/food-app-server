@@ -1,3 +1,5 @@
+import { prismaClient } from "../../lib/db.js";
+
 const books = [
   {
     title: "The Awakening",
@@ -17,8 +19,42 @@ const books = [
   },
 ];
 
+enum Role {
+  ADMIN,
+  CUSTOMER,
+  SHOP,
+}
+
 export const resolvers = {
   Query: {
     books: () => books,
+  },
+  Mutation: {
+    createUserAccount: async (
+      _: any,
+      {
+        name,
+        email,
+        password,
+        saltPassword,
+        role,
+      }: {
+        name: string;
+        email: string;
+        password: string;
+        saltPassword: string;
+        role: Role | any;
+      }
+    ) => {
+      return await prismaClient.userAccount.create({
+        data: {
+          id: "44444",
+          email: email,
+          hashPassword: password,
+          saltPassword: saltPassword,
+          role: role,
+        },
+      });
+    },
   },
 };

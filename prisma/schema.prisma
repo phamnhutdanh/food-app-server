@@ -33,7 +33,7 @@ model UserAccount {
 }
 
 model Customer {
-  id             String    @id
+  id             Int       @id @default(autoincrement())
   name           String
   imageUrl       String?
   phoneNumber    String?
@@ -49,9 +49,9 @@ model Customer {
 }
 
 model Cart {
-  idCustomer String
+  idCustomer Int
   idFood     Int
-  idShop     String
+  idShop     Int
   customer   Customer @relation(fields: [idCustomer], references: [id])
   food       Food     @relation(fields: [idFood], references: [id])
   shop       Shop     @relation(fields: [idShop], references: [id])
@@ -62,7 +62,7 @@ model Cart {
 }
 
 model Shop {
-  id                 String  @id
+  id                 Int     @id @default(autoincrement())
   name               String
   imageUrl           String?
   backgroundImageUrl String?
@@ -110,7 +110,7 @@ model Category {
   sellCount Int
   dateAdded DateTime @default(now())
 
-  idShop     String
+  idShop     Int
   idFood     Int
   idFoodSize Int
   shop       Shop     @relation(fields: [idShop], references: [id])
@@ -133,8 +133,8 @@ model Order {
   totalCost              BigInt
   noteFromShop           String?
 
-  idCustomer   String
-  idShop       String
+  idCustomer   Int
+  idShop       Int
   customer     Customer       @relation(fields: [idCustomer], references: [id])
   shop         Shop           @relation(fields: [idShop], references: [id])
   OrderDetails OrderDetails[]
