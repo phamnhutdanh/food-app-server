@@ -23,8 +23,6 @@ export const typeDefs = `#graphql
   type UserAccount {
     id: String   
     email: String!   
-    hashPassword: String!
-    saltPassword: String!
     role: Role!
     customer: [Customer]
     shop: [Shop]
@@ -125,7 +123,6 @@ export const typeDefs = `#graphql
   }
 
   type Mutation {
-    createUserAccount(name: String!, email: String!, password: String!, saltPassword: String!, role: Role): UserAccount
-    createCustomer(name: String!, idAccount: String!): Boolean
+    createUserAccount(name: String!, email: String!, password: String!, role: Role): Boolean
   }
 `;

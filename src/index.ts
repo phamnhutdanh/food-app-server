@@ -5,7 +5,7 @@ import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHt
 import express from "express";
 import http from "http";
 import cors from "cors";
-import { typeDefs } from "./graphql/schema/graphql.js";
+import { typeDefs } from "./graphql/schema/graphqlSchema.js";
 import { resolvers } from "./graphql/resolvers/resolvers.js";
 
 interface MyContext {
@@ -43,7 +43,7 @@ app.use(
 );
 
 // Modified server startup
-await new Promise<void>((resolve) =>
-  httpServer.listen({ port: 4000 }, resolve)
-);
+await new Promise<void>((resolve) => {
+  httpServer.listen({ port: 4000 }, resolve);
+});
 console.log(`🚀 Server ready at http://localhost:4000/graphql`);

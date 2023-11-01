@@ -1,5 +1,6 @@
+import { createUserWithEmailAndPassword } from "@firebase/auth";
 import { prismaClient } from "../../lib/db.js";
-
+import { FIREBASE_AUTH } from "../../services/FirebaseConfig.js";
 const books = [
   {
     title: "The Awakening",
@@ -36,25 +37,64 @@ export const resolvers = {
         name,
         email,
         password,
-        saltPassword,
         role,
       }: {
         name: string;
         email: string;
         password: string;
-        saltPassword: string;
         role: Role | any;
       }
     ) => {
-      return await prismaClient.userAccount.create({
-        data: {
-          id: "44444",
-          email: email,
-          hashPassword: password,
-          saltPassword: saltPassword,
-          role: role,
-        },
-      });
+      const auth = FIREBASE_AUTH;
+      createUserWithEmailAndPassword(auth, email, password)
+        .then(async (userCredential) => {
+          // Signed up
+          const user = userCredential.user;
+          // create UserAccount
+          await prismaClient.userAccount
+            .create({
+              data: {
+                id: user.uid,
+                email: email,
+                role: role,
+              },
+            })
+            .then(async () => {
+              // Create Customer
+              if (role == "CUSTOMER") {
+                await prismaClient.customer
+                  .create({
+                    data: {
+                      name: name,
+                      idUserAccount: user.uid,
+                    },
+                  })
+                  .then(() => {
+                    return true;
+                  });
+              }
+              // Create Shop
+              else if (role == "SHOP") {
+                await prismaClient.shop
+                  .create({
+                    data: {
+                      name: name,
+                      idUserAccount: user.uid,
+                    },
+                  })
+                  .then(() => {
+                    return true;
+                  });
+              }
+            });
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          console.log("createUserAccount errorCode: ", errorCode);
+          console.log("createUserAccount errorMessage: ", errorMessage);
+          return false;
+        });
     },
   },
 };
