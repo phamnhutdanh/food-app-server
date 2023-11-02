@@ -23,13 +23,12 @@ enum Gender {
 }
 
 model UserAccount {
-  id           String     @id
-  email        String     @unique
-  hashPassword String
-  saltPassword String
-  role         Role       @default(CUSTOMER)
-  Customer     Customer[]
-  Shop         Shop[]
+  id    String @id
+  email String @unique
+  role  Role   @default(CUSTOMER)
+
+  Customer Customer[]
+  Shop     Shop[]
 }
 
 model Customer {
@@ -42,23 +41,10 @@ model Customer {
   birthday       DateTime? @default(now())
 
   idUserAccount String
-  userAccount   UserAccount @relation(fields: [idUserAccount], references: [id])
+  userAccount   UserAccount @relation(fields: [idUserAccount], references: [id], onDelete: Cascade)
 
   Cart  Cart[]
   Order Order[]
-}
-
-model Cart {
-  idCustomer Int
-  idFood     Int
-  idShop     Int
-  customer   Customer @relation(fields: [idCustomer], references: [id])
-  food       Food     @relation(fields: [idFood], references: [id])
-  shop       Shop     @relation(fields: [idShop], references: [id])
-
-  quantity Int
-
-  @@id([idFood, idCustomer, idShop])
 }
 
 model Shop {
@@ -70,11 +56,24 @@ model Shop {
   defaultAddress     String?
 
   idUserAccount String
-  userAccount   UserAccount @relation(fields: [idUserAccount], references: [id])
+  userAccount   UserAccount @relation(fields: [idUserAccount], references: [id], onDelete: Cascade)
 
   Cart     Cart[]
   Category Category[]
   Order    Order[]
+}
+
+model Cart {
+  idCustomer Int
+  idFood     Int
+  idShop     Int
+  customer   Customer @relation(fields: [idCustomer], references: [id], onDelete: Cascade)
+  food       Food     @relation(fields: [idFood], references: [id])
+  shop       Shop     @relation(fields: [idShop], references: [id], onDelete: Cascade)
+
+  quantity Int
+
+  @@id([idFood, idCustomer, idShop])
 }
 
 model Food {
@@ -113,7 +112,7 @@ model Category {
   idShop     Int
   idFood     Int
   idFoodSize Int
-  shop       Shop     @relation(fields: [idShop], references: [id])
+  shop       Shop     @relation(fields: [idShop], references: [id], onDelete: Cascade)
   food       Food     @relation(fields: [idFood], references: [id])
   foodSize   FoodSize @relation(fields: [idFoodSize], references: [id])
 }
@@ -145,7 +144,7 @@ model OrderDetails {
 
   idOrder Int
   idFood  Int
-  order   Order @relation(fields: [idOrder], references: [id])
+  order   Order @relation(fields: [idOrder], references: [id], onDelete: Cascade)
   food    Food  @relation(fields: [idFood], references: [id])
 
   @@id([idFood, idOrder])

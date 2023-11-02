@@ -5,8 +5,8 @@ import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHt
 import express from "express";
 import http from "http";
 import cors from "cors";
-import { typeDefs } from "./graphql/schema/graphql.js";
-import { resolvers } from "./graphql/resolvers/resolvers.js";
+import { typeDefs } from "./graphql/typeDefs.js";
+import { resolvers } from "./graphql/resolvers.js";
 
 interface MyContext {
   token?: string;
@@ -22,8 +22,8 @@ const httpServer = http.createServer(app);
 // Same ApolloServer initialization as before, plus the drain plugin
 // for our httpServer.
 const server = new ApolloServer<MyContext>({
-  typeDefs,
-  resolvers,
+  typeDefs: typeDefs,
+  resolvers: resolvers,
   plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
 });
 // Ensure we wait for our server to start
@@ -43,7 +43,7 @@ app.use(
 );
 
 // Modified server startup
-await new Promise<void>((resolve) =>
-  httpServer.listen({ port: 4000 }, resolve)
-);
+await new Promise<void>((resolve) => {
+  httpServer.listen({ port: 4000 }, resolve);
+});
 console.log(`🚀 Server ready at http://localhost:4000/graphql`);
