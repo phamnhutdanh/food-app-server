@@ -10,142 +10,252 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum Role {
+enum UserRole {
+  USER
   ADMIN
-  CUSTOMER
-  SHOP
+  SHOP_OWNER
 }
 
-enum Gender {
-  MALE
-  FEMALE
-  OTHERS
-}
-
-model UserAccount {
-  id    String @id
-  email String @unique
-  role  Role   @default(CUSTOMER)
-
-  Customer Customer[]
-  Shop     Shop[]
-}
-
-model Customer {
-  id             Int       @id @default(autoincrement())
-  name           String
-  imageUrl       String?
-  phoneNumber    String?
-  defaultAddress String?
-  gender         Gender?   @default(OTHERS)
-  birthday       DateTime? @default(now())
-
-  idUserAccount String
-  userAccount   UserAccount @relation(fields: [idUserAccount], references: [id], onDelete: Cascade)
-
-  Cart  Cart[]
-  Order Order[]
-}
-
-model Shop {
-  id                 Int     @id @default(autoincrement())
-  name               String
-  imageUrl           String?
-  backgroundImageUrl String?
-  phoneNumber        String?
-  defaultAddress     String?
-
-  idUserAccount String
-  userAccount   UserAccount @relation(fields: [idUserAccount], references: [id], onDelete: Cascade)
-
-  Cart     Cart[]
-  Category Category[]
-  Order    Order[]
-}
-
-model Cart {
-  idCustomer Int
-  idFood     Int
-  idShop     Int
-  customer   Customer @relation(fields: [idCustomer], references: [id], onDelete: Cascade)
-  food       Food     @relation(fields: [idFood], references: [id])
-  shop       Shop     @relation(fields: [idShop], references: [id], onDelete: Cascade)
-
-  quantity Int
-
-  @@id([idFood, idCustomer, idShop])
-}
-
-model Food {
-  id          Int     @id @default(autoincrement())
-  name        String
-  imageUrl    String?
-  description String?
-  price       BigInt
-
-  idFoodType Int?
-  foodType   FoodType? @relation(fields: [idFoodType], references: [id])
-
-  Cart         Cart[]
-  Category     Category[]
-  OrderDetails OrderDetails[]
-}
-
-model FoodType {
-  id   Int    @id @default(autoincrement())
-  type String @unique
-  Food Food[]
-}
-
-model FoodSize {
-  id       Int        @id @default(autoincrement())
-  size     String     @unique
-  Category Category[]
-}
-
-model Category {
-  id        Int      @id @default(autoincrement())
-  amount    Int
-  sellCount Int
-  dateAdded DateTime @default(now())
-
-  idShop     Int
-  idFood     Int
-  idFoodSize Int
-  shop       Shop     @relation(fields: [idShop], references: [id], onDelete: Cascade)
-  food       Food     @relation(fields: [idFood], references: [id])
-  foodSize   FoodSize @relation(fields: [idFoodSize], references: [id])
+enum BillingCardType {
+  DEFAULT
+  GOLD
 }
 
 enum OrderStatus {
   PENDING
-  CANCEL
-  ACCEPT
-  COMPLETE
+  ON_THE_WAY
+  DELIVERED
+  CANCELED
+}
+
+model Account {
+  id          String   @id @default(cuid())
+  email       String   @unique
+  role        UserRole @default(USER)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  firebaseUID String
+  //type              String
+  //provider          String
+  //providerAccountId String
+  //refresh_token     String? @db.Text
+  //access_token      String? @db.Text
+  //expires_at        Int?
+  //token_type        String?
+  //scope             String?
+  //id_token          String? @db.Text
+  //session_state     String?
+  User        User[]
+
+  //@@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model User {
+  id                 String  @id @default(cuid())
+  name               String? @default(cuid())
+  //reactCoinsCount    Int               @default(0)
+  phoneNumber        String? @unique
+  imageUrl           String?
+  backgroundImageUrl String?
+  defaultAddress     String?
+
+  accountId String
+  account   Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
+
+  cart         Cart[]
+  billingCards BillingCard[]
+  orders       Order[]
+  Shop         Shop[]
+  Rating       Rating[]
+
+  @@map("users")
+}
+
+model Cart {
+  id String @id @default(cuid())
+
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  products CartProduct[]
+
+  @@map("carts")
+}
+
+model CartProduct {
+  id        String  @id @default(cuid())
+  title     String? @unique
+  fullPrice Float
+  count     Int     @default(1)
+  imageUri  String?
+  // discountPercent    Int     @default(0)
+  // weight             Float
+  // tag                String
+
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  shopId    String
+  shop      Shop    @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  cartId    String
+  cart      Cart    @relation(fields: [cartId], references: [id], onDelete: Cascade)
+
+  @@map("cartProducts")
+}
+
+model BillingCard {
+  id          String          @id @default(cuid())
+  number      Int[]
+  cvc         Int
+  expiredDate DateTime
+  type        BillingCardType @default(DEFAULT)
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("billingCards")
 }
 
 model Order {
-  id                     Int         @id @default(autoincrement())
-  orderStatus            OrderStatus @default(PENDING)
-  createdAt              DateTime    @default(now())
-  timeDeliveryToCustomer DateTime?   @default(now())
-  totalCost              BigInt
-  noteFromShop           String?
+  id              String      @id @default(cuid())
+  deliveryAddress String
+  // cutleryCount    Int            @default(0)
+  totalCost       Float
+  // productsCost    Float
+  // deliveryCost         Float
+  // serviceFee           Float
+  status          OrderStatus @default(PENDING)
+  // recipientPhoneNumber String
+  // recipientName        String
+  commentary      String?
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  deliveredAt     DateTime
 
-  idCustomer   Int
-  idShop       Int
-  customer     Customer       @relation(fields: [idCustomer], references: [id])
-  shop         Shop           @relation(fields: [idShop], references: [id])
-  OrderDetails OrderDetails[]
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+
+  products OrderProduct[]
+
+  @@map("orders")
 }
 
-model OrderDetails {
-  quantity Int
+model OrderProduct {
+  id        String   @id @default(cuid())
+  title     String?
+  price     Float
+  count     Int
+  imageUri  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  idOrder Int
-  idFood  Int
-  order   Order @relation(fields: [idOrder], references: [id], onDelete: Cascade)
-  food    Food  @relation(fields: [idFood], references: [id])
+  orderId   String
+  order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  shopId    String
+  shop      Shop    @relation(fields: [shopId], references: [id], onDelete: Cascade)
 
-  @@id([idFood, idOrder])
+  @@map("orderProducts")
 }
+
+model Shop {
+  id          String  @id @default(cuid())
+  shopAddress String?
+
+  idUser String
+  user   User   @relation(fields: [idUser], references: [id], onDelete: Cascade)
+
+  CartProduct     CartProduct[]
+  OrderProduct    OrderProduct[]
+  ProductCategory ProductCategory[]
+
+  @@map("shops")
+}
+
+model ProductCategory {
+  id          String  @id @default(cuid())
+  title       String  @unique
+  description String
+  imageUri    String?
+
+  shopId String
+  shop   Shop   @relation(fields: [shopId], references: [id], onDelete: Cascade)
+
+  subcategories ProductSubcategory[]
+
+  @@map("productCategories")
+}
+
+model ProductSubcategory {
+  id          String @id @default(cuid())
+  title       String @unique
+  description String
+
+  categoryId      String
+  productCategory ProductCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  products Product[]
+
+  @@map("productSubcategories")
+}
+
+model Product {
+  id                  String  @id @default(cuid())
+  title               String  @unique
+  description         String
+  fullPrice           Float
+  // discountPercent    Int                @default(0)
+  size                String? @unique
+  imageUri            String?
+  averageRatingScores Float
+
+  subcategoryId      String
+  productSubcategory ProductSubcategory @relation(fields: [subcategoryId], references: [id], onDelete: Cascade)
+
+  CartProduct  CartProduct[]
+  OrderProduct OrderProduct[]
+  ProductTag   ProductTag[]
+  Rating       Rating[]
+
+  @@map("products")
+}
+
+model ProductTag {
+  id    String @id @default(cuid())
+  title String @unique
+
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+}
+
+model Rating {
+  id        String   @id @default(cuid())
+  score     Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id])
+  productId String?
+  product   Product? @relation(fields: [productId], references: [id])
+}
+
+// model Session {
+//   id           String   @id @default(cuid())
+//   sessionToken String   @unique
+//   expires      DateTime
+
+//   userId       String
+//   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+// }
+
+// model VerificationToken {
+//   identifier String
+//   token      String   @unique
+//   expires    DateTime
+
+//   @@unique([identifier, token])
+// }
