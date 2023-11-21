@@ -29,11 +29,11 @@ enum OrderStatus {
 }
 
 model Account {
-  id          String   @id @default(cuid())
-  email       String   @unique
-  role        UserRole @default(USER)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id          String    @id @default(cuid())
+  email       String    @unique
+  role        UserRole? @default(USER)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
   firebaseUID String
   //type              String
   //provider          String

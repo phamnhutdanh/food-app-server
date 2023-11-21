@@ -2,29 +2,25 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import { FIREBASE_AUTH } from "../../services/FirebaseConfig.js";
 import { prismaClient } from "../../lib/db.js";
 
-enum Role {
+enum UserRole {
+  USER,
   ADMIN,
-  CUSTOMER,
-  SHOP,
+  SHOP_OWNER,
 }
 
 const queries = {
-  books: () => {},
+  accounts: () => {},
 };
 
 const mutations = {
   signUp: async (
     _: any,
     {
-      name,
       email,
       password,
-      role,
     }: {
-      name: string;
       email: string;
       password: string;
-      role: Role | any;
     }
   ) => {
     const auth = FIREBASE_AUTH;
@@ -33,34 +29,22 @@ const mutations = {
         // Signed up
         const user = userCredential.user;
         // create UserAccount
-        await prismaClient.userAccount
+        await prismaClient.account
           .create({
             data: {
-              id: user.uid,
               email: email,
-              role: role,
+              firebaseUID: user.uid,
             },
           })
-          .then(async () => {
-            // Create Customer
-            if (role == "CUSTOMER") {
-              await prismaClient.customer.create({
+          .then(async (account) => {
+            // Create User
+            await prismaClient.user
+              .create({
                 data: {
-                  name: name,
-                  idUserAccount: user.uid,
+                  accountId: account.id,
                 },
-              });
-            }
-            // Create Shop
-            else if (role == "SHOP") {
-              await prismaClient.shop.create({
-                data: {
-                  name: name,
-                  idUserAccount: user.uid,
-                },
-              });
-            }
-            return user.uid;
+              })
+              .then(() => account.id);
           });
       })
       .catch((error) => {

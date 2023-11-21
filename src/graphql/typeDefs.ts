@@ -1,22 +1,22 @@
 import { UserAccount } from "./user_account/userAccount.js";
 
-const ROLE = `
+const ROLE = `#graphql
 enum Role {
-  ADMIN
-  CUSTOMER
-  SHOP
+   USER
+   ADMIN
+   SHOP_OWNER
 }
 `;
 
 export const typeDefs = `#graphql
-            ${ROLE}
-            ${UserAccount.userAccountTypeDef}
+   ${ROLE}
+   ${UserAccount.userAccountTypeDef}
             
-            type Query {
-               ${UserAccount.userAccountQuery}
-            }
+   type Query {
+      ${UserAccount.userAccountQuery}
+   }
 
-            type Mutation {
-               ${UserAccount.userAccountMutation}
-            }
-        `;
+   type Mutation {
+       ${UserAccount.userAccountMutation}
+   }           
+`;

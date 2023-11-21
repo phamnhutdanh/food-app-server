@@ -1,3 +1,3 @@
 export const userAccountQuery = `#graphql
-    books: Boolean
+    accounts: Boolean
 `;
