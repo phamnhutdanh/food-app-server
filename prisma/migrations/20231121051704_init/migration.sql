@@ -11,7 +11,7 @@ CREATE TYPE "OrderStatus" AS ENUM ('PENDING', 'ON_THE_WAY', 'DELIVERED', 'CANCEL
 CREATE TABLE "accounts" (
     "id" TEXT NOT NULL,
     "email" TEXT NOT NULL,
-    "role" "UserRole" NOT NULL DEFAULT 'USER',
+    "role" "UserRole" DEFAULT 'USER',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "firebaseUID" TEXT NOT NULL,
