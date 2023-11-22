@@ -8,8 +8,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "seed": "npx ts-node --esm prisma/seed.ts",
     "compile": "tsc",
-    "start": "node build/src/index.js",
-    "dev": "tsc-watch --onSuccess \"npm start\""
+    "dev": "node build/src/index.js",
+    "start": "tsc-watch --onSuccess \"npm run dev\""
   },
   "keywords": [],
   "author": "",
