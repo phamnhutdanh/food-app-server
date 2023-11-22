@@ -34,5 +34,9 @@
     "firebase-admin": "^11.11.0",
     "graphql": "^16.8.1",
     "tsc-watch": "^6.0.4"
+  },
+  "engines": {
+    "node": "18.18.2",
+    "npm": "10.2.4"
   }
 }
