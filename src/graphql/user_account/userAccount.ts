@@ -1,7 +1,7 @@
-import { userAccountMutation } from "./userAccountMutation.js";
-import { userAccountQuery } from "./userAccountQuery.js";
-import { userAccountResolver } from "./userAccountResolver.js";
-import { userAccountTypeDef } from "./userAccountTypeDef.js";
+import { userAccountMutation } from "./userAccountMutation";
+import { userAccountQuery } from "./userAccountQuery";
+import { userAccountResolver } from "./userAccountResolver";
+import { userAccountTypeDef } from "./userAccountTypeDef";
 
 export const UserAccount = {
   userAccountTypeDef,

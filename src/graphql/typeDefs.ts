@@ -1,4 +1,4 @@
-import { UserAccount } from "./user_account/userAccount.js";
+import { UserAccount } from "./user_account/userAccount";
 
 const ROLE = `#graphql
 enum Role {

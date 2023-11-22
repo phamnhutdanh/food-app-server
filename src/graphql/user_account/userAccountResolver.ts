@@ -1,6 +1,6 @@
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { FIREBASE_AUTH } from "../../services/FirebaseConfig.js";
-import { prismaClient } from "../../lib/db.js";
+import { FIREBASE_AUTH } from "../../auth/FirebaseConfig";
+import { prismaClient } from "../../lib/db";
 
 enum UserRole {
   USER,
