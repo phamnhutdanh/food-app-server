@@ -3,13 +3,14 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "seed": "npx ts-node --esm prisma/seed.ts",
     "compile": "tsc",
-    "dev": "node build/src/index.js",
-    "start": "tsc-watch --onSuccess \"npm run dev\""
+    "build": "tsc",
+    "dev": "ts-node-dev --notify --respawn src/index.ts",
+    "debug": "ts-node-dev --notify --respawn --inspect=0.0.0.0:9229 src/index.ts",
+    "start": "tsc-watch --onSuccess \"node dist/index.js\" "
   },
   "keywords": [],
   "author": "",
@@ -34,5 +35,9 @@
     "firebase-admin": "^11.11.0",
     "graphql": "^16.8.1",
     "tsc-watch": "^6.0.4"
+  },
+  "engines": {
+    "node": "18.18.2",
+    "npm": "10.2.4"
   }
 }
