@@ -20,7 +20,7 @@ const server = new ApolloServer<Context>({
   resolvers: resolvers,
 });
 
-const serverPort = +(process.env.SERVER_PORT ?? "4000");
+const serverPort = Number(process.env.PORT || 4000);
 startStandaloneServer(server, {
   listen: { port: serverPort },
   context: async ({ req }) => ({
