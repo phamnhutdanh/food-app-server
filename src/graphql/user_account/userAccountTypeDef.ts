@@ -1,6 +1,6 @@
 export const userAccountTypeDef = `#graphql
   type UserAccountID {
-    id: String!
+    id: String
   }
 
   type UserAccount {
