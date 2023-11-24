@@ -162,8 +162,9 @@ model OrderProduct {
 }
 
 model Shop {
-  id          String  @id @default(cuid())
-  shopAddress String?
+  id              String  @id @default(cuid())
+  shopAddress     String?
+  shopPhoneNumber String?
 
   idUser String
   user   User   @relation(fields: [idUser], references: [id], onDelete: Cascade)
