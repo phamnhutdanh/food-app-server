@@ -1,5 +1,3 @@
 export const userAccountMutation = `#graphql
-      signUp(email: String!, password: String!): UserAccountID
-      login(email: String!, password: String!): UserAccountID
-      logout: Boolean
+      createUserAccount(email: String!, password: String!, firebaseUID: String!): UserAccountID
 `;
