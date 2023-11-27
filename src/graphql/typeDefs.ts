@@ -11,6 +11,10 @@ enum Role {
 export const typeDefs = `#graphql
    ${ROLE}
    ${UserAccount.userAccountTypeDef}
+
+   type ID {
+      id: String
+   }
             
    type Query {
       ${UserAccount.userAccountQuery}

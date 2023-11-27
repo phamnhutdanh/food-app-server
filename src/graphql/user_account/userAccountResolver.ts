@@ -7,7 +7,18 @@ enum UserRole {
 }
 
 const queries = {
-  accounts: () => {},
+  getAllAccounts: async () => {
+    const accounts = await prismaClient.account.findMany();
+    return accounts;
+  },
+  getAccountById: async (_: any, { id }: { id: string }) => {
+    const account = await prismaClient.account.findUnique({
+      where: {
+        id: id,
+      },
+    });
+    return account;
+  },
 };
 
 const mutations = {

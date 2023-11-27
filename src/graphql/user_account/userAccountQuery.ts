@@ -1,3 +1,4 @@
 export const userAccountQuery = `#graphql
-    accounts: Boolean
+    getAllAccounts: [Account]
+    getAccountById(id: ID!): Account
 `;

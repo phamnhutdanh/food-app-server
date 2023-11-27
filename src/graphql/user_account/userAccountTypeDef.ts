@@ -1,6 +1,11 @@
 export const userAccountTypeDef = `#graphql
-  type UserAccountID {
+  type Account {
     id: String
+    email: String
+    role: Role
+    createdAt: Int
+    updatedAt: String
+    firebaseUID: String
   }
 
   type UserAccount {

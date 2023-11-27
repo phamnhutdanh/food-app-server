@@ -1,3 +1,3 @@
 export const userQuery = `#graphql
-    books: Boolean
+    users: Boolean
 `;
