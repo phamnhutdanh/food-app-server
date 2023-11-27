@@ -1,4 +1,5 @@
 import { Product } from "./product/product";
+import { ProductCategory } from "./product_category/productCategory";
 import { ProductSubCategory } from "./product_sub_category/productSubCategory";
 import { User } from "./user/user";
 import { UserAccount } from "./user_account/userAccount";
@@ -17,6 +18,7 @@ export const typeDefs = `#graphql
    ${User.userTypeDef}
    ${Product.productTypeDef}
    ${ProductSubCategory.productSubCategoryTypeDef}
+   ${ProductCategory.productCategoryTypeDef}
 
    type ID {
       id: String
@@ -27,6 +29,7 @@ export const typeDefs = `#graphql
       ${User.userQuery}
       ${Product.productQuery}
       ${ProductSubCategory.productSubCategoryQuery}
+      ${ProductCategory.productCategoryQuery}
    }
 
    type Mutation {
@@ -34,5 +37,6 @@ export const typeDefs = `#graphql
        ${User.userMutation}
        ${Product.productMutation}
        ${ProductSubCategory.productSubCategoryMutation}
+       ${ProductCategory.productCategoryMutation}
    }           
 `;
