@@ -1,3 +1,4 @@
+import { Product } from "./product/product";
 import { User } from "./user/user";
 import { UserAccount } from "./user_account/userAccount";
 
@@ -13,6 +14,7 @@ export const typeDefs = `#graphql
    ${ROLE}
    ${UserAccount.userAccountTypeDef}
    ${User.userTypeDef}
+   ${Product.productTypeDef}
 
    type ID {
       id: String
@@ -21,10 +23,12 @@ export const typeDefs = `#graphql
    type Query {
       ${UserAccount.userAccountQuery}
       ${User.userQuery}
+      ${Product.productQuery}
    }
 
    type Mutation {
        ${UserAccount.userAccountMutation}
        ${User.userMutation}
+       ${Product.productMutation}
    }           
 `;

@@ -1,11 +1,5 @@
 import { prismaClient } from "../../lib/db";
 
-enum UserRole {
-  USER,
-  ADMIN,
-  SHOP_OWNER,
-}
-
 const queries = {
   getAllUsers: async () => {
     const users = await prismaClient.user.findMany({
