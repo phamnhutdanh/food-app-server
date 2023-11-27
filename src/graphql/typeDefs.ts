@@ -1,3 +1,4 @@
+import { User } from "./user/user";
 import { UserAccount } from "./user_account/userAccount";
 
 const ROLE = `#graphql
@@ -11,6 +12,7 @@ enum Role {
 export const typeDefs = `#graphql
    ${ROLE}
    ${UserAccount.userAccountTypeDef}
+   ${User.userTypeDef}
 
    type ID {
       id: String
@@ -18,9 +20,11 @@ export const typeDefs = `#graphql
             
    type Query {
       ${UserAccount.userAccountQuery}
+      ${User.userQuery}
    }
 
    type Mutation {
        ${UserAccount.userAccountMutation}
+       ${User.userMutation}
    }           
 `;

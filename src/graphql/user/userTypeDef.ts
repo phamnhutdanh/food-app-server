@@ -1,7 +1,11 @@
 export const userTypeDef = `#graphql
   type User {
     id: String
-    email: String!
-    role: Role!
+    name: String
+    phoneNumber: String
+    imageUrl: String
+    backgroundImageUrl: String
+    defaultAddress: String
+    account: Account
   }
 `;
