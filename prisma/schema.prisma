@@ -217,11 +217,13 @@ model Product {
   subcategoryId      String
   productSubcategory ProductSubcategory @relation(fields: [subcategoryId], references: [id], onDelete: Cascade)
 
+  sizeId      String?
+  productSize ProductSize? @relation(fields: [sizeId], references: [id])
+
   CartProduct   CartProduct[]
   OrderProduct  OrderProduct[]
   ProductTag    ProductTag[]
   RatingProduct RatingProduct[]
-  ProductSize   ProductSize[]
 
   @@map("products")
 }
@@ -230,8 +232,7 @@ model ProductSize {
   id    String @id @default(cuid())
   title String
 
-  productId String?
-  product   Product? @relation(fields: [productId], references: [id])
+  Product Product[]
 }
 
 model ProductTag {
@@ -239,7 +240,7 @@ model ProductTag {
   title String
 
   productId String
-  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  product   Product @relation(fields: [productId], references: [id])
 }
 
 model RatingProduct {
