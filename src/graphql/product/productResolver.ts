@@ -17,6 +17,14 @@ const queries = {
     });
     return product;
   },
+  getPopularProduct: async () => {
+    const products = await prismaClient.product.findMany({
+      orderBy: {
+        averageRatingScores: "desc",
+      },
+    });
+    return products;
+  },
 };
 
 const mutations = {};
