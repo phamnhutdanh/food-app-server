@@ -211,7 +211,6 @@ model Product {
   description         String
   fullPrice           Float
   // discountPercent    Int                @default(0)
-  size                String? @unique
   imageUri            String?
   averageRatingScores Float
 
@@ -222,8 +221,17 @@ model Product {
   OrderProduct  OrderProduct[]
   ProductTag    ProductTag[]
   RatingProduct RatingProduct[]
+  ProductSize   ProductSize[]
 
   @@map("products")
+}
+
+model ProductSize {
+  id    String @id @default(cuid())
+  title String
+
+  productId String?
+  product   Product? @relation(fields: [productId], references: [id])
 }
 
 model ProductTag {
