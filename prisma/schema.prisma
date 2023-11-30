@@ -63,11 +63,12 @@ model User {
   accountId String
   account   Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
 
-  cart         Cart[]
-  billingCards BillingCard[]
-  orders       Order[]
-  Shop         Shop[]
-  Rating       Rating[]
+  cart          Cart[]
+  billingCards  BillingCard[]
+  orders        Order[]
+  Shop          Shop[]
+  RatingProduct RatingProduct[]
+  RatingShop    RatingShop[]
 
   @@map("users")
 }
@@ -162,8 +163,9 @@ model OrderProduct {
 }
 
 model Shop {
-  id          String  @id @default(cuid())
-  shopAddress String?
+  id              String  @id @default(cuid())
+  shopAddress     String?
+  shopPhoneNumber String?
 
   idUser String
   user   User   @relation(fields: [idUser], references: [id], onDelete: Cascade)
@@ -171,6 +173,7 @@ model Shop {
   CartProduct     CartProduct[]
   OrderProduct    OrderProduct[]
   ProductCategory ProductCategory[]
+  RatingShop      RatingShop[]
 
   @@map("shops")
 }
@@ -208,30 +211,39 @@ model Product {
   description         String
   fullPrice           Float
   // discountPercent    Int                @default(0)
-  size                String? @unique
   imageUri            String?
   averageRatingScores Float
 
   subcategoryId      String
   productSubcategory ProductSubcategory @relation(fields: [subcategoryId], references: [id], onDelete: Cascade)
 
-  CartProduct  CartProduct[]
-  OrderProduct OrderProduct[]
-  ProductTag   ProductTag[]
-  Rating       Rating[]
+  sizeId      String?
+  productSize ProductSize? @relation(fields: [sizeId], references: [id])
+
+  CartProduct   CartProduct[]
+  OrderProduct  OrderProduct[]
+  ProductTag    ProductTag[]
+  RatingProduct RatingProduct[]
 
   @@map("products")
 }
 
-model ProductTag {
+model ProductSize {
   id    String @id @default(cuid())
-  title String @unique
+  title String
 
-  productId String
-  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  Product Product[]
 }
 
-model Rating {
+model ProductTag {
+  id    String @id @default(cuid())
+  title String
+
+  productId String
+  product   Product @relation(fields: [productId], references: [id])
+}
+
+model RatingProduct {
   id        String   @id @default(cuid())
   score     Int
   createdAt DateTime @default(now())
@@ -241,6 +253,18 @@ model Rating {
   user      User?    @relation(fields: [userId], references: [id])
   productId String?
   product   Product? @relation(fields: [productId], references: [id])
+}
+
+model RatingShop {
+  id        String   @id @default(cuid())
+  score     Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  userId String?
+  user   User?   @relation(fields: [userId], references: [id])
+  shopId String?
+  shop   Shop?   @relation(fields: [shopId], references: [id])
 }
 
 // model Session {

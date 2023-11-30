@@ -1,3 +1,4 @@
 export const userQuery = `#graphql
-    books: Boolean
+    getAllUsers: [User]
+    getUserById(id: ID!): User
 `;
