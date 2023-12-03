@@ -1,6 +1,7 @@
 import { Product } from "./product/product";
 import { ProductCategory } from "./product_category/productCategory";
 import { ProductSubCategory } from "./product_sub_category/productSubCategory";
+import { Shop } from "./shop/shop";
 import { User } from "./user/user";
 import { UserAccount } from "./user_account/userAccount";
 
@@ -11,6 +12,7 @@ export const resolvers = {
     ...Product.productResolver.queries,
     ...ProductSubCategory.productSubCategoryResolver.queries,
     ...ProductCategory.productCategoryResolver.queries,
+    ...Shop.shopResolver.queries,
   },
   Mutation: {
     ...UserAccount.userAccountResolver.mutations,
@@ -18,5 +20,6 @@ export const resolvers = {
     ...Product.productResolver.mutations,
     ...ProductSubCategory.productSubCategoryResolver.mutations,
     ...ProductCategory.productCategoryResolver.mutations,
+    ...Shop.shopResolver.mutations,
   },
 };

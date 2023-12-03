@@ -4,9 +4,25 @@ const queries = {
   getAllProducts: async () => {
     const products = await prismaClient.product.findMany({
       include: {
-        productSubcategory: true,
+        productSubcategory: {
+          include: {
+            productCategory: {
+              include: {
+                shop: true,
+              },
+            },
+          },
+        },
       },
     });
+
+    products.forEach((product) => {
+      const test =
+        product.productSubcategory.productCategory.shop.shopPhoneNumber;
+      console.log(test);
+    });
+    console.log(products);
+
     return products;
   },
   getProductById: async (_: any, { id }: { id: string }) => {

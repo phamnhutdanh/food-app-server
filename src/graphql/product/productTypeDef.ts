@@ -8,5 +8,6 @@ export const productTypeDef = `#graphql
     imageUri: String
     averageRatingScores: Float
     subcategoryId: String
+    productSubcategory: ProductSubCategory
   }
 `;

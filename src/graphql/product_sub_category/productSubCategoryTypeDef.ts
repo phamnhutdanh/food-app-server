@@ -4,5 +4,6 @@ export const productSubCategoryTypeDef = `#graphql
     title: String
     description: String
     categoryId: String
+    productCategory: ProductCategory
   }
 `;

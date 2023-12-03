@@ -5,5 +5,6 @@ export const productCategoryTypeDef = `#graphql
     description: String
     imageUri: String
     shopId: String
+    shop: Shop
   }
 `;
