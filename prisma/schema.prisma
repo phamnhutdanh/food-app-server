@@ -212,7 +212,10 @@ model Product {
   fullPrice           Float
   // discountPercent    Int                @default(0)
   imageUri            String?
-  averageRatingScores Float
+  averageRatingScores Float?  @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   subcategoryId      String
   productSubcategory ProductSubcategory @relation(fields: [subcategoryId], references: [id], onDelete: Cascade)
