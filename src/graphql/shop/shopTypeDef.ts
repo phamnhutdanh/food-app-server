@@ -3,6 +3,7 @@ export const shopTypeDef = `#graphql
     id: String
     shopAddress: String
     shopPhoneNumber: String
+    shopName: String
     idUser: String
     user: User
   }
