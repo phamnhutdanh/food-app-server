@@ -4,6 +4,7 @@ export const shopTypeDef = `#graphql
     shopAddress: String
     shopPhoneNumber: String
     shopName: String
+    imageUri: String
     user: User
   }
 `;
