@@ -23,6 +23,10 @@ const queries = {
       where: {
         id: id,
       },
+      include: {
+        ProductSize: true,
+        ProductTag: true,
+      },
     });
     return product;
   },
