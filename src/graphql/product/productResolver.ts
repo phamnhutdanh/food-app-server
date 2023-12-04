@@ -26,6 +26,15 @@ const queries = {
       include: {
         ProductSize: true,
         ProductTag: true,
+        productSubcategory: {
+          include: {
+            productCategory: {
+              include: {
+                shop: true,
+              },
+            },
+          },
+        },
       },
     });
     return product;
