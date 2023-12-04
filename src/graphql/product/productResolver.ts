@@ -33,10 +33,19 @@ const queries = {
     });
     return product;
   },
-  getPopularProduct: async () => {
+  getPopularProducts: async () => {
     const products = await prismaClient.product.findMany({
       orderBy: {
         averageRatingScores: "desc",
+      },
+    });
+    return products;
+  },
+  getRecentProducts: async () => {
+    const products = await prismaClient.product.findMany({
+      orderBy: {
+        createdAt: "desc",
+        updatedAt: "desc",
       },
     });
     return products;

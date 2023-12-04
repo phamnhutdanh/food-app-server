@@ -4,10 +4,11 @@ export const productTypeDef = `#graphql
     title: String
     description: String
     fullPrice: Float
-    size: String
     imageUri: String
     averageRatingScores: Float
     subcategoryId: String
     productSubcategory: ProductSubCategory
+    sizeId: String
+    
   }
 `;
