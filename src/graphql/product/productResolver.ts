@@ -16,13 +16,6 @@ const queries = {
       },
     });
 
-    products.forEach((product) => {
-      const test =
-        product.productSubcategory.productCategory.shop.shopPhoneNumber;
-      console.log(test);
-    });
-    console.log(products);
-
     return products;
   },
   getProductById: async (_: any, { id }: { id: string }) => {
@@ -39,6 +32,17 @@ const queries = {
         averageRatingScores: "desc",
       },
       take: 10,
+      include: {
+        productSubcategory: {
+          include: {
+            productCategory: {
+              include: {
+                shop: true,
+              },
+            },
+          },
+        },
+      },
     });
     return products;
   },
@@ -53,6 +57,17 @@ const queries = {
         },
       ],
       take: 10,
+      include: {
+        productSubcategory: {
+          include: {
+            productCategory: {
+              include: {
+                shop: true,
+              },
+            },
+          },
+        },
+      },
     });
     return products;
   },
