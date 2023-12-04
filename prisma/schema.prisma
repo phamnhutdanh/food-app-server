@@ -208,7 +208,7 @@ model ProductSubcategory {
 
 model Product {
   id                  String  @id @default(cuid())
-  title               String  @unique
+  title               String
   description         String
   fullPrice           Float
   // discountPercent    Int                @default(0)
@@ -218,6 +218,8 @@ model Product {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  productSizeId      String?
+  productSize        ProductSize?       @relation(fields: [productSizeId], references: [id])
   subcategoryId      String
   productSubcategory ProductSubcategory @relation(fields: [subcategoryId], references: [id], onDelete: Cascade)
 
@@ -225,16 +227,14 @@ model Product {
   OrderProduct  OrderProduct[]
   ProductTag    ProductTag[]
   RatingProduct RatingProduct[]
-  ProductSize   ProductSize[]
 
   @@map("products")
 }
 
 model ProductSize {
-  id        String  @id @default(cuid())
-  title     String
-  productId String
-  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  id      String    @id @default(cuid())
+  title   String
+  Product Product[]
 }
 
 model ProductTag {
