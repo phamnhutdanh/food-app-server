@@ -167,6 +167,7 @@ model Shop {
   shopAddress     String?
   shopPhoneNumber String?
   shopName        String?
+  imageUri        String?
 
   idUser String
   user   User   @relation(fields: [idUser], references: [id], onDelete: Cascade)
