@@ -38,15 +38,21 @@ const queries = {
       orderBy: {
         averageRatingScores: "desc",
       },
+      take: 10,
     });
     return products;
   },
   getRecentProducts: async () => {
     const products = await prismaClient.product.findMany({
-      orderBy: {
-        createdAt: "desc",
-        updatedAt: "desc",
-      },
+      orderBy: [
+        {
+          createdAt: "desc",
+        },
+        {
+          updatedAt: "desc",
+        },
+      ],
+      take: 10,
     });
     return products;
   },
