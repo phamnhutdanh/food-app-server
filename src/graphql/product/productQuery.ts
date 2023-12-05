@@ -3,4 +3,5 @@ export const productQuery = `#graphql
     getProductById(id: ID!): Product
     getPopularProducts: [Product]
     getRecentProducts: [Product]
+    getAllProductOfShop(id: ID!): [Product]
 `;

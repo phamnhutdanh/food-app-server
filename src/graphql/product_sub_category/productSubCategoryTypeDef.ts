@@ -5,5 +5,6 @@ export const productSubCategoryTypeDef = `#graphql
     description: String
     categoryId: String
     productCategory: ProductCategory
+    products: [Product]
   }
 `;

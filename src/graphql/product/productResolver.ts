@@ -84,6 +84,32 @@ const queries = {
     });
     return products;
   },
+  getAllProductOfShop: async (_: any, { id }: { id: string }) => {
+    const products = await prismaClient.product.findMany({
+      where: {
+        productSubcategory: {
+          productCategory: {
+            shopId: {
+              equals: id,
+            },
+          },
+        },
+      },
+      include: {
+        productSubcategory: {
+          include: {
+            productCategory: {
+              include: {
+                shop: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    return products;
+  },
 };
 
 const mutations = {};

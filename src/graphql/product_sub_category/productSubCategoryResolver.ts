@@ -22,6 +22,24 @@ const queries = {
     );
     return productSubcategory;
   },
+  getAllSubCategoryOfShop: async (_: any, { id }: { id: string }) => {
+    const productSubCategories = await prismaClient.productSubcategory.findMany(
+      {
+        where: {
+          productCategory: {
+            shopId: {
+              equals: id,
+            },
+          },
+        },
+        include: {
+          products: true,
+        },
+      }
+    );
+
+    return productSubCategories;
+  },
 };
 
 const mutations = {};
