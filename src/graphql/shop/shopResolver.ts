@@ -1,7 +1,7 @@
 import { prismaClient } from "../../lib/db";
 
 const queries = {
-  getAllProducts: async () => {},
+  getAllShop: async () => {},
   getShopById: async (_: any, { id }: { id: string }) => {
     const shop = await prismaClient.shop.findUnique({
       where: {
