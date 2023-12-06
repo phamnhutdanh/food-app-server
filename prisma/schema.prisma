@@ -76,18 +76,17 @@ model User {
 model Cart {
   id String @id @default(cuid())
 
-  userId String @unique
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  products CartProduct[]
+  userId      String        @unique
+  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  CartProduct CartProduct[]
 
   @@map("carts")
 }
 
 model CartProduct {
   id        String  @id @default(cuid())
-  title     String? @unique
-  fullPrice Float
+  title     String?
+  fullPrice Float?  @default(0)
   count     Int     @default(1)
   imageUri  String?
   // discountPercent    Int     @default(0)

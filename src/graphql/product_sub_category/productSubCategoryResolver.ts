@@ -33,7 +33,9 @@ const queries = {
           },
         },
         include: {
-          products: true,
+          products: {
+            take: 10,
+          },
         },
       }
     );

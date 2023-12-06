@@ -26,11 +26,9 @@ const mutations = {
     _: any,
     {
       email,
-      password,
       firebaseUID,
     }: {
       email: string;
-      password: string;
       firebaseUID: string;
     }
   ) => {
@@ -41,6 +39,7 @@ const mutations = {
         data: {
           email: email,
           firebaseUID: firebaseUID,
+          role: "USER",
         },
       })
       .then(async (account) => {
