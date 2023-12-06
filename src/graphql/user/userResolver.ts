@@ -28,6 +28,9 @@ const queries = {
           firebaseUID: id,
         },
       },
+      include: {
+        account: true,
+      },
     });
     return user;
   },
