@@ -29,12 +29,12 @@ enum OrderStatus {
 }
 
 model Account {
-  id          String    @id @default(cuid())
-  email       String    @unique
-  role        UserRole? @default(USER)
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  firebaseUID String
+  id                  String                @id @default(cuid())
+  email               String                @unique
+  role                UserRole?             @default(USER)
+  createdAt           DateTime              @default(now())
+  updatedAt           DateTime              @updatedAt
+  firebaseUID         String
   //type              String
   //provider          String
   //providerAccountId String
@@ -45,7 +45,9 @@ model Account {
   //scope             String?
   //id_token          String? @db.Text
   //session_state     String?
-  User        User[]
+  User                User[]
+  ReportAccount       ReportAccount[]
+  ReportAccountDetail ReportAccountDetail[]
 
   //@@unique([provider, providerAccountId])
   @@map("accounts")
@@ -84,21 +86,17 @@ model Cart {
 }
 
 model CartProduct {
-  id        String  @id @default(cuid())
-  title     String?
-  fullPrice Float?  @default(0)
-  count     Int     @default(1)
-  imageUri  String?
+  id            String      @id @default(cuid())
+  title         String?
+  amount        Int?        @default(1)
+  fullPrice     Float?      @default(0)
   // discountPercent    Int     @default(0)
   // weight             Float
   // tag                String
-
-  productId String
-  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
-  shopId    String
-  shop      Shop    @relation(fields: [shopId], references: [id], onDelete: Cascade)
-  cartId    String
-  cart      Cart    @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  productSizeId String
+  productSize   ProductSize @relation(fields: [productSizeId], references: [id])
+  cartId        String
+  cart          Cart        @relation(fields: [cartId], references: [id], onDelete: Cascade)
 
   @@map("cartProducts")
 }
@@ -145,18 +143,16 @@ model Order {
 model OrderProduct {
   id        String   @id @default(cuid())
   title     String?
-  price     Float
+  fullPrice Float
   count     Int
   imageUri  String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  orderId   String
-  order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  productId String
-  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
-  shopId    String
-  shop      Shop    @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  orderId       String
+  order         Order       @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productSizeId String
+  productSize   ProductSize @relation(fields: [productSizeId], references: [id])
 
   @@map("orderProducts")
 }
@@ -171,8 +167,6 @@ model Shop {
   idUser String
   user   User   @relation(fields: [idUser], references: [id], onDelete: Cascade)
 
-  CartProduct     CartProduct[]
-  OrderProduct    OrderProduct[]
   ProductCategory ProductCategory[]
   RatingShop      RatingShop[]
 
@@ -195,7 +189,7 @@ model ProductCategory {
 
 model ProductSubcategory {
   id          String @id @default(cuid())
-  title       String @unique
+  title       String
   description String
 
   categoryId      String
@@ -221,8 +215,6 @@ model Product {
   subcategoryId      String
   productSubcategory ProductSubcategory @relation(fields: [subcategoryId], references: [id], onDelete: Cascade)
 
-  CartProduct   CartProduct[]
-  OrderProduct  OrderProduct[]
   ProductTag    ProductTag[]
   RatingProduct RatingProduct[]
   ProductSize   ProductSize[]
@@ -236,6 +228,9 @@ model ProductSize {
   fullPrice Float
   productId String
   product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  CartProduct  CartProduct[]
+  OrderProduct OrderProduct[]
 }
 
 model ProductTag {
@@ -249,6 +244,7 @@ model ProductTag {
 model RatingProduct {
   id        String   @id @default(cuid())
   score     Int
+  comment   String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -261,6 +257,7 @@ model RatingProduct {
 model RatingShop {
   id        String   @id @default(cuid())
   score     Int
+  comment   String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -268,6 +265,30 @@ model RatingShop {
   user   User?   @relation(fields: [userId], references: [id])
   shopId String?
   shop   Shop?   @relation(fields: [shopId], references: [id])
+}
+
+model ReportAccount {
+  id String @id @default(cuid())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  reporterId          String
+  reporter            Account               @relation(fields: [reporterId], references: [id])
+  ReportAccountDetail ReportAccountDetail[]
+}
+
+model ReportAccountDetail {
+  id        String   @id @default(cuid())
+  title     String
+  message   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  accountId       String
+  account         Account       @relation(fields: [accountId], references: [id])
+  reportAccountId String
+  reportAccount   ReportAccount @relation(fields: [reportAccountId], references: [id])
 }
 
 // model Session {
