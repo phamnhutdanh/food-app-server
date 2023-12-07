@@ -1,3 +1,4 @@
+import CartProduct from "./cart_product/cartProduct";
 import { Product } from "./product/product";
 import { ProductCategory } from "./product_category/productCategory";
 import { ProductSize } from "./product_size/productSize";
@@ -6,6 +7,11 @@ import { ProductTag } from "./product_tag/productTag";
 import { Shop } from "./shop/shop";
 import { User } from "./user/user";
 import { UserAccount } from "./user_account/userAccount";
+
+export const enum RESOLVER_TYPE {
+  Query,
+  Mutation,
+}
 
 export const resolvers = {
   Query: {
@@ -17,6 +23,7 @@ export const resolvers = {
     ...Shop.shopResolver.queries,
     ...ProductSize.productSizeResolver.queries,
     ...ProductTag.productTagResolver.queries,
+    ...CartProduct.resolver(RESOLVER_TYPE.Query),
   },
   Mutation: {
     ...UserAccount.userAccountResolver.mutations,
@@ -27,5 +34,6 @@ export const resolvers = {
     ...Shop.shopResolver.mutations,
     ...ProductSize.productSizeResolver.mutations,
     ...ProductTag.productTagResolver.mutations,
+    ...CartProduct.resolver(RESOLVER_TYPE.Mutation),
   },
 };

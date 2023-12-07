@@ -1,3 +1,4 @@
+import CartProduct from "./cart_product/cartProduct";
 import { Product } from "./product/product";
 import { ProductCategory } from "./product_category/productCategory";
 import { ProductSize } from "./product_size/productSize";
@@ -26,6 +27,8 @@ export const typeDefs = `#graphql
    ${ProductSize.productSizeTypeDef}
    ${ProductTag.productTagTypeDef}
 
+   ${CartProduct.typeDef()}
+
    type ID {
       id: String
    }
@@ -40,6 +43,8 @@ export const typeDefs = `#graphql
       ${ProductSize.productSizeQuery}
       ${ProductTag.productTagQuery}
 
+      ${CartProduct.query()}
+
    }
 
    type Mutation {
@@ -51,5 +56,7 @@ export const typeDefs = `#graphql
        ${Shop.shopMutation}
        ${ProductSize.productSizeMutation}
        ${ProductTag.productTagMutation}
+
+       ${CartProduct.mutation()}
    }           
 `;
