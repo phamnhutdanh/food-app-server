@@ -23,7 +23,6 @@ const queries = {
         },
       },
     });
-    console.log("Cart product");
     return cartProducts;
   },
 };

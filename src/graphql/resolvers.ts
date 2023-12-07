@@ -1,12 +1,12 @@
 import CartProduct from "./cart_product/cartProduct";
-import { Product } from "./product/product";
-import { ProductCategory } from "./product_category/productCategory";
-import { ProductSize } from "./product_size/productSize";
-import { ProductSubCategory } from "./product_sub_category/productSubCategory";
-import { ProductTag } from "./product_tag/productTag";
-import { Shop } from "./shop/shop";
-import { User } from "./user/user";
-import { UserAccount } from "./user_account/userAccount";
+import Product from "./product/product";
+import ProductCategory from "./product_category/productCategory";
+import ProductSize from "./product_size/productSize";
+import ProductSubCategory from "./product_sub_category/productSubCategory";
+import ProductTag from "./product_tag/productTag";
+import Shop from "./shop/shop";
+import User from "./user/user";
+import UserAccount from "./user_account/userAccount";
 
 export const enum RESOLVER_TYPE {
   Query,
@@ -15,25 +15,25 @@ export const enum RESOLVER_TYPE {
 
 export const resolvers = {
   Query: {
-    ...UserAccount.userAccountResolver.queries,
-    ...User.userResolver.queries,
-    ...Product.productResolver.queries,
-    ...ProductSubCategory.productSubCategoryResolver.queries,
-    ...ProductCategory.productCategoryResolver.queries,
-    ...Shop.shopResolver.queries,
-    ...ProductSize.productSizeResolver.queries,
-    ...ProductTag.productTagResolver.queries,
+    ...UserAccount.resolver(RESOLVER_TYPE.Query),
+    ...User.resolver(RESOLVER_TYPE.Query),
+    ...Product.resolver(RESOLVER_TYPE.Query),
+    ...ProductSubCategory.resolver(RESOLVER_TYPE.Query),
+    ...ProductCategory.resolver(RESOLVER_TYPE.Query),
+    ...Shop.resolver(RESOLVER_TYPE.Query),
+    ...ProductSize.resolver(RESOLVER_TYPE.Query),
+    ...ProductTag.resolver(RESOLVER_TYPE.Query),
     ...CartProduct.resolver(RESOLVER_TYPE.Query),
   },
   Mutation: {
-    ...UserAccount.userAccountResolver.mutations,
-    ...User.userResolver.mutations,
-    ...Product.productResolver.mutations,
-    ...ProductSubCategory.productSubCategoryResolver.mutations,
-    ...ProductCategory.productCategoryResolver.mutations,
-    ...Shop.shopResolver.mutations,
-    ...ProductSize.productSizeResolver.mutations,
-    ...ProductTag.productTagResolver.mutations,
+    ...UserAccount.resolver(RESOLVER_TYPE.Mutation),
+    ...User.resolver(RESOLVER_TYPE.Mutation),
+    ...Product.resolver(RESOLVER_TYPE.Mutation),
+    ...ProductSubCategory.resolver(RESOLVER_TYPE.Mutation),
+    ...ProductCategory.resolver(RESOLVER_TYPE.Mutation),
+    ...Shop.resolver(RESOLVER_TYPE.Mutation),
+    ...ProductSize.resolver(RESOLVER_TYPE.Mutation),
+    ...ProductTag.resolver(RESOLVER_TYPE.Mutation),
     ...CartProduct.resolver(RESOLVER_TYPE.Mutation),
   },
 };

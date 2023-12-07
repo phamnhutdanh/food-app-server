@@ -1,12 +1,12 @@
 import CartProduct from "./cart_product/cartProduct";
-import { Product } from "./product/product";
-import { ProductCategory } from "./product_category/productCategory";
-import { ProductSize } from "./product_size/productSize";
-import { ProductSubCategory } from "./product_sub_category/productSubCategory";
-import { ProductTag } from "./product_tag/productTag";
-import { Shop } from "./shop/shop";
-import { User } from "./user/user";
-import { UserAccount } from "./user_account/userAccount";
+import Product from "./product/product";
+import ProductCategory from "./product_category/productCategory";
+import ProductSize from "./product_size/productSize";
+import ProductSubCategory from "./product_sub_category/productSubCategory";
+import ProductTag from "./product_tag/productTag";
+import Shop from "./shop/shop";
+import User from "./user/user";
+import UserAccount from "./user_account/userAccount";
 
 const ROLE = `#graphql
 enum Role {
@@ -18,15 +18,14 @@ enum Role {
 
 export const typeDefs = `#graphql
    ${ROLE}
-   ${UserAccount.userAccountTypeDef}
-   ${User.userTypeDef}
-   ${Product.productTypeDef}
-   ${ProductSubCategory.productSubCategoryTypeDef}
-   ${ProductCategory.productCategoryTypeDef}
-   ${Shop.shopTypeDef}
-   ${ProductSize.productSizeTypeDef}
-   ${ProductTag.productTagTypeDef}
-
+   ${UserAccount.typeDef()}
+   ${User.typeDef()}
+   ${Product.typeDef()}
+   ${ProductSubCategory.typeDef()}
+   ${ProductCategory.typeDef()}
+   ${Shop.typeDef()}
+   ${ProductSize.typeDef()}
+   ${ProductTag.typeDef()}
    ${CartProduct.typeDef()}
 
    type ID {
@@ -34,29 +33,27 @@ export const typeDefs = `#graphql
    }
             
    type Query {
-      ${UserAccount.userAccountQuery}
-      ${User.userQuery}
-      ${Product.productQuery}
-      ${ProductSubCategory.productSubCategoryQuery}
-      ${ProductCategory.productCategoryQuery}
-      ${Shop.shopQuery}
-      ${ProductSize.productSizeQuery}
-      ${ProductTag.productTagQuery}
-
+      ${UserAccount.query()}
+      ${User.query()}
+      ${Product.query()}
+      ${ProductSubCategory.query()}
+      ${ProductCategory.query()}
+      ${Shop.query()}
+      ${ProductSize.query()}
+      ${ProductTag.query()}
       ${CartProduct.query()}
 
    }
 
    type Mutation {
-       ${UserAccount.userAccountMutation}
-       ${User.userMutation}
-       ${Product.productMutation}
-       ${ProductSubCategory.productSubCategoryMutation}
-       ${ProductCategory.productCategoryMutation}
-       ${Shop.shopMutation}
-       ${ProductSize.productSizeMutation}
-       ${ProductTag.productTagMutation}
-
+       ${UserAccount.mutation()}
+       ${User.mutation()}
+       ${Product.mutation()}
+       ${ProductSubCategory.mutation()}
+       ${ProductCategory.mutation()}
+       ${Shop.mutation()}
+       ${ProductSize.mutation()}
+       ${ProductTag.mutation()}
        ${CartProduct.mutation()}
    }           
 `;

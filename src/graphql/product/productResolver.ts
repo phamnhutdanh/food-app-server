@@ -15,7 +15,6 @@ const queries = {
         },
       },
     });
-
     return products;
   },
   getProductById: async (_: any, { id }: { id: string }) => {

@@ -1,11 +1,36 @@
-import { userMutation } from "./userMutation";
-import { userQuery } from "./userQuery";
+import { RESOLVER_TYPE } from "../resolvers";
 import { userResolver } from "./userResolver";
-import { userTypeDef } from "./userTypeDef";
 
-export const User = {
-  userTypeDef,
-  userQuery,
-  userMutation,
-  userResolver,
-};
+export default class User {
+  static query() {
+    return `#graphql
+        getAllUsers: [User]
+        getUserById(id: ID!): User
+        getUserByFirebaseUID(id: ID!): User
+    `;
+  }
+  static mutation() {
+    return `#graphql
+
+    `;
+  }
+
+  static typeDef() {
+    return `#graphql
+      type User {
+        id: String
+        name: String
+        phoneNumber: String
+        imageUrl: String
+        backgroundImageUrl: String
+        defaultAddress: String
+        account: Account
+      }
+    `;
+  }
+
+  static resolver(type: RESOLVER_TYPE) {
+    if (type === RESOLVER_TYPE.Query) return userResolver.queries;
+    else return userResolver.mutations;
+  }
+}
