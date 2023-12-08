@@ -50,8 +50,12 @@ const mutations = {
               accountId: account.id,
             },
           })
-          .then(() => {
-            userAccountID = account.id;
+          .then(async (user) => {
+            await prismaClient.cart.create({
+              data: {
+                userId: user.id,
+              },
+            });
           });
       })
       .catch((error) => {
