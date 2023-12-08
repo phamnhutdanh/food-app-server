@@ -4,12 +4,16 @@ import { cartProductResolver } from "./cartProductResolver";
 export default class CartProduct {
   static query() {
     return `#graphql
-        getAllCartProducts: [CartProduct]
+        getAllCartProductsOfUser: [CartProduct]
     `;
   }
+
   static mutation() {
     return `#graphql
-
+        addProductToCart(productSizeId: ID!, userId: ID!, amount: Int, fullPrice: Float): ID 
+        updateCartProduct(cartProductId: ID!, productSizeId: ID!, amount: Int, fullPrice: Float): ID
+        deleteCartProduct(cartProductId: ID!): ID
+        deleteAllCartProductsOfUser(userId: ID!): ID
     `;
   }
 

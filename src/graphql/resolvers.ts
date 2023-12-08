@@ -1,3 +1,4 @@
+import Cart from "./cart/cart";
 import CartProduct from "./cart_product/cartProduct";
 import Product from "./product/product";
 import ProductCategory from "./product_category/productCategory";
@@ -24,6 +25,7 @@ export const resolvers = {
     ...ProductSize.resolver(RESOLVER_TYPE.Query),
     ...ProductTag.resolver(RESOLVER_TYPE.Query),
     ...CartProduct.resolver(RESOLVER_TYPE.Query),
+    ...Cart.resolver(RESOLVER_TYPE.Query),
   },
   Mutation: {
     ...UserAccount.resolver(RESOLVER_TYPE.Mutation),
@@ -35,5 +37,6 @@ export const resolvers = {
     ...ProductSize.resolver(RESOLVER_TYPE.Mutation),
     ...ProductTag.resolver(RESOLVER_TYPE.Mutation),
     ...CartProduct.resolver(RESOLVER_TYPE.Mutation),
+    ...Cart.resolver(RESOLVER_TYPE.Mutation),
   },
 };
