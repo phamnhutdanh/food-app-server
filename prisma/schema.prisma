@@ -57,10 +57,10 @@ model User {
   id                 String  @id @default(cuid())
   name               String? @default(cuid())
   //reactCoinsCount    Int               @default(0)
-  phoneNumber        String? @unique
+  phoneNumber        String? @unique @default("")
   imageUrl           String?
   backgroundImageUrl String?
-  defaultAddress     String?
+  defaultAddress     String? @default("")
 
   accountId String
   account   Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
@@ -87,7 +87,7 @@ model Cart {
 
 model CartProduct {
   id            String      @id @default(cuid())
-  title         String?
+  title         String?     @default("")
   amount        Int?        @default(1)
   fullPrice     Float?      @default(0)
   // discountPercent    Int     @default(0)
@@ -127,7 +127,7 @@ model Order {
   status          OrderStatus @default(PENDING)
   // recipientPhoneNumber String
   // recipientName        String
-  commentary      String?
+  commentary      String?     @default("")
   createdAt       DateTime    @default(now())
   updatedAt       DateTime    @updatedAt
   deliveredAt     DateTime
@@ -142,7 +142,7 @@ model Order {
 
 model OrderProduct {
   id        String   @id @default(cuid())
-  title     String?
+  title     String?  @default("")
   fullPrice Float
   count     Int
   imageUri  String?
@@ -159,10 +159,10 @@ model OrderProduct {
 
 model Shop {
   id              String  @id @default(cuid())
-  shopAddress     String?
-  shopPhoneNumber String?
-  shopName        String?
-  imageUri        String?
+  shopAddress     String? @default("")
+  shopPhoneNumber String? @default("")
+  shopName        String? @default("")
+  imageUri        String? @default("")
 
   idUser String
   user   User   @relation(fields: [idUser], references: [id], onDelete: Cascade)
@@ -216,8 +216,8 @@ model Product {
   productSubcategory ProductSubcategory @relation(fields: [subcategoryId], references: [id], onDelete: Cascade)
 
   ProductTag    ProductTag[]
-  RatingProduct RatingProduct[]
   ProductSize   ProductSize[]
+  RatingProduct RatingProduct[]
 
   @@map("products")
 }
@@ -244,27 +244,27 @@ model ProductTag {
 model RatingProduct {
   id        String   @id @default(cuid())
   score     Int
-  comment   String?
+  comment   String?  @default("")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  userId    String?
-  user      User?    @relation(fields: [userId], references: [id])
-  productId String?
-  product   Product? @relation(fields: [productId], references: [id])
+  userId    String
+  user      User    @relation(fields: [userId], references: [id])
+  productId String
+  product   Product @relation(fields: [productId], references: [id])
 }
 
 model RatingShop {
   id        String   @id @default(cuid())
   score     Int
-  comment   String?
+  comment   String?  @default("")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  userId String?
-  user   User?   @relation(fields: [userId], references: [id])
-  shopId String?
-  shop   Shop?   @relation(fields: [shopId], references: [id])
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+  shopId String
+  shop   Shop   @relation(fields: [shopId], references: [id])
 }
 
 model ReportAccount {
