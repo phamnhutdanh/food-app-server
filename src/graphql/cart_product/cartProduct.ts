@@ -4,7 +4,7 @@ import { cartProductResolver } from "./cartProductResolver";
 export default class CartProduct {
   static query() {
     return `#graphql
-        getAllCartProductsOfUser: [CartProduct]
+        getAllCartProductOfUser(userId: ID!): [CartProduct]
     `;
   }
 

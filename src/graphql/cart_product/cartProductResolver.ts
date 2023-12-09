@@ -1,19 +1,16 @@
 import { prismaClient } from "../../lib/db";
 
 const queries = {
-  getAllCartProductsOfUser: async (
+  getAllCartProductOfUser: async (
     _: any,
     {
-      productSizeId,
       userId,
     }: {
-      productSizeId: string;
       userId: string;
     }
   ) => {
-    const cartProducts = await prismaClient.cartProduct.findMany({
+    const cartProduct = await prismaClient.cartProduct.findMany({
       where: {
-        productSizeId: productSizeId,
         cart: {
           userId: userId,
         },
@@ -21,24 +18,13 @@ const queries = {
       include: {
         productSize: {
           include: {
-            product: {
-              include: {
-                productSubcategory: {
-                  include: {
-                    productCategory: {
-                      include: {
-                        shop: true,
-                      },
-                    },
-                  },
-                },
-              },
-            },
+            product: true,
           },
         },
       },
     });
-    return cartProducts;
+    console.log(cartProduct);
+    return cartProduct;
   },
 };
 

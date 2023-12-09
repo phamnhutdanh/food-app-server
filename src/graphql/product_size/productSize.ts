@@ -20,6 +20,7 @@ export default class ProductSize {
         title: String
         fullPrice: Float
         productId: String
+        product: Product
       }
     `;
   }
