@@ -57,6 +57,7 @@ const mutations = {
       fullPrice: number;
     }
   ) => {
+    let cartProductId = "";
     await prismaClient.cart
       .findUnique({
         where: {
@@ -64,15 +65,27 @@ const mutations = {
         },
       })
       .then(async (cart) => {
-        await prismaClient.cartProduct.create({
-          data: {
-            productSizeId: productSizeId,
-            cartId: cart?.id ? cart.id : "",
-            amount: amount,
-            fullPrice: fullPrice,
-          },
-        });
+        await console.log(cart);
+        await prismaClient.cartProduct
+          .create({
+            data: {
+              productSizeId: productSizeId,
+              cartId: cart?.id ? cart.id : "",
+              amount: amount,
+              fullPrice: fullPrice,
+            },
+          })
+          .then((cartProduct) => {
+            cartProductId = cartProduct.id;
+          });
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log("createUserAccount errorCode: ", errorCode);
+        console.log("createUserAccount errorMessage: ", errorMessage);
       });
+    return cartProductId;
   },
   updateCartProduct: async (
     _: any,
