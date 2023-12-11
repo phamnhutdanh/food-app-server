@@ -21,7 +21,7 @@ const mutations = {
           deliveredAt: order.deliveredAt,
           deliveryAddress: order.deliveryAddress,
           totalCost: order.totalCost,
-          status: order.status,
+          status: "PENDING",
           commentary: order.commentary,
           userId: order.userId,
         },

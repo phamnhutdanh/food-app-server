@@ -1,11 +1,9 @@
-import { OrderStatus } from "@prisma/client";
 import { RESOLVER_TYPE } from "../resolvers";
 import { orderResolver } from "./orderResolver";
 
 export type OrderInputType = {
   deliveryAddress: string;
   totalCost: number;
-  status: OrderStatus;
   deliveredAt: string;
   userId: string;
   commentary: string;
@@ -28,7 +26,6 @@ export default class Order {
       input orderInput {
         deliveryAddress: String
         totalCost: Float
-        status: OrderStatus
         deliveredAt: String
         commentary: String
         userId: String
