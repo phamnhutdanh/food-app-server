@@ -29,14 +29,31 @@ const mutations = {
       .then(async (order) => {
         const orderId = order.id;
         orderProducts.forEach(async (item) => {
-          await prismaClient.orderProduct.create({
-            data: {
-              orderId: orderId,
-              fullPrice: item.fullPrice,
-              count: item.count,
-              productSizeId: item.productSizeId,
-            },
-          });
+          await prismaClient.orderProduct
+            .create({
+              data: {
+                orderId: orderId,
+                fullPrice: item.fullPrice,
+                count: item.count,
+                productSizeId: item.productSizeId,
+              },
+            })
+            .then(async (orderProduct) => {
+              await prismaClient.cartProduct.deleteMany({
+                where: {
+                  AND: [
+                    {
+                      productSizeId: orderProduct.productSizeId,
+                    },
+                    {
+                      cart: {
+                        userId: order.userId,
+                      },
+                    },
+                  ],
+                },
+              });
+            });
         });
       });
   },
