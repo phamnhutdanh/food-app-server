@@ -20,7 +20,7 @@ export default class UserAccount {
         id: String
         email: String
         role: Role
-        createdAt: Int
+        createdAt: String
         updatedAt: String
         firebaseUID: String
       }

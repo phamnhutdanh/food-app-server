@@ -1,5 +1,7 @@
 import Cart from "./cart/cart";
 import CartProduct from "./cart_product/cartProduct";
+import Order from "./order/order";
+import OrderProduct from "./order_product/orderProduct";
 import Product from "./product/product";
 import ProductCategory from "./product_category/productCategory";
 import ProductSize from "./product_size/productSize";
@@ -17,8 +19,18 @@ enum Role {
 }
 `;
 
+const ORDER_STATUS = `#graphql
+enum OrderStatus {
+   PENDING
+   ON_THE_WAY
+   DELIVERED
+   CANCELED
+}
+`;
+
 export const typeDefs = `#graphql
    ${ROLE}
+   ${ORDER_STATUS}
    ${UserAccount.typeDef()}
    ${User.typeDef()}
    ${Product.typeDef()}
@@ -29,6 +41,8 @@ export const typeDefs = `#graphql
    ${ProductTag.typeDef()}
    ${CartProduct.typeDef()}
    ${Cart.typeDef()}
+   ${Order.typeDef()}
+   ${OrderProduct.typeDef()}
 
    type ID {
       id: String
@@ -45,7 +59,8 @@ export const typeDefs = `#graphql
       ${ProductTag.query()}
       ${CartProduct.query()}
       ${Cart.query()}
-
+      ${Order.query()}
+      ${OrderProduct.query()}
    }
 
    type Mutation {
@@ -59,5 +74,8 @@ export const typeDefs = `#graphql
        ${ProductTag.mutation()}
        ${CartProduct.mutation()}
        ${Cart.mutation()}
+       ${Order.mutation()}
+       ${OrderProduct.mutation()}
+
    }           
 `;
