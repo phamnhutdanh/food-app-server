@@ -15,6 +15,22 @@ const queries = {
       where: {
         id: id,
       },
+      include: {
+        account: true,
+      },
+    });
+    return user;
+  },
+  getUserByFirebaseUID: async (_: any, { id }: { id: string }) => {
+    const user = await prismaClient.user.findFirst({
+      where: {
+        account: {
+          firebaseUID: id,
+        },
+      },
+      include: {
+        account: true,
+      },
     });
     return user;
   },

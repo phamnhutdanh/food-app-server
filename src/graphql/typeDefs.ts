@@ -1,8 +1,15 @@
-import { Product } from "./product/product";
-import { ProductCategory } from "./product_category/productCategory";
-import { ProductSubCategory } from "./product_sub_category/productSubCategory";
-import { User } from "./user/user";
-import { UserAccount } from "./user_account/userAccount";
+import Cart from "./cart/cart";
+import CartProduct from "./cart_product/cartProduct";
+import Order from "./order/order";
+import OrderProduct from "./order_product/orderProduct";
+import Product from "./product/product";
+import ProductCategory from "./product_category/productCategory";
+import ProductSize from "./product_size/productSize";
+import ProductSubCategory from "./product_sub_category/productSubCategory";
+import ProductTag from "./product_tag/productTag";
+import Shop from "./shop/shop";
+import User from "./user/user";
+import UserAccount from "./user_account/userAccount";
 
 const ROLE = `#graphql
 enum Role {
@@ -12,31 +19,63 @@ enum Role {
 }
 `;
 
+const ORDER_STATUS = `#graphql
+enum OrderStatus {
+   PENDING
+   ON_THE_WAY
+   DELIVERED
+   CANCELED
+}
+`;
+
 export const typeDefs = `#graphql
    ${ROLE}
-   ${UserAccount.userAccountTypeDef}
-   ${User.userTypeDef}
-   ${Product.productTypeDef}
-   ${ProductSubCategory.productSubCategoryTypeDef}
-   ${ProductCategory.productCategoryTypeDef}
+   ${ORDER_STATUS}
+   ${UserAccount.typeDef()}
+   ${User.typeDef()}
+   ${Product.typeDef()}
+   ${ProductSubCategory.typeDef()}
+   ${ProductCategory.typeDef()}
+   ${Shop.typeDef()}
+   ${ProductSize.typeDef()}
+   ${ProductTag.typeDef()}
+   ${CartProduct.typeDef()}
+   ${Cart.typeDef()}
+   ${Order.typeDef()}
+   ${OrderProduct.typeDef()}
 
    type ID {
       id: String
    }
             
    type Query {
-      ${UserAccount.userAccountQuery}
-      ${User.userQuery}
-      ${Product.productQuery}
-      ${ProductSubCategory.productSubCategoryQuery}
-      ${ProductCategory.productCategoryQuery}
+      ${UserAccount.query()}
+      ${User.query()}
+      ${Product.query()}
+      ${ProductSubCategory.query()}
+      ${ProductCategory.query()}
+      ${Shop.query()}
+      ${ProductSize.query()}
+      ${ProductTag.query()}
+      ${CartProduct.query()}
+      ${Cart.query()}
+      ${Order.query()}
+      ${OrderProduct.query()}
    }
 
    type Mutation {
-       ${UserAccount.userAccountMutation}
-       ${User.userMutation}
-       ${Product.productMutation}
-       ${ProductSubCategory.productSubCategoryMutation}
-       ${ProductCategory.productCategoryMutation}
+       ${UserAccount.mutation()}
+       ${User.mutation()}
+       ${Product.mutation()}
+       ${ProductSubCategory.mutation()}
+       ${ProductCategory.mutation()}
+       ${Shop.mutation()}
+       ${ProductSize.mutation()}
+       ${ProductTag.mutation()}
+       ${CartProduct.mutation()}
+       ${Cart.mutation()}
+       ${Order.mutation()}
+       ${OrderProduct.mutation()}
+
    }           
 `;

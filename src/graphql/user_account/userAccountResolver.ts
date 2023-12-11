@@ -26,11 +26,9 @@ const mutations = {
     _: any,
     {
       email,
-      password,
       firebaseUID,
     }: {
       email: string;
-      password: string;
       firebaseUID: string;
     }
   ) => {
@@ -41,6 +39,7 @@ const mutations = {
         data: {
           email: email,
           firebaseUID: firebaseUID,
+          role: "USER",
         },
       })
       .then(async (account) => {
@@ -51,8 +50,12 @@ const mutations = {
               accountId: account.id,
             },
           })
-          .then(() => {
-            userAccountID = account.id;
+          .then(async (user) => {
+            await prismaClient.cart.create({
+              data: {
+                userId: user.id,
+              },
+            });
           });
       })
       .catch((error) => {
