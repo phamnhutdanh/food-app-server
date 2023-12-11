@@ -12,7 +12,7 @@ const mutations = {
       orderProducts,
     }: {
       order: OrderInputType;
-      orderProducts: [OrderProductInputType];
+      orderProducts: OrderProductInputType[];
     }
   ) => {
     await prismaClient.order
