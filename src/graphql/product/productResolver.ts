@@ -109,6 +109,35 @@ const queries = {
 
     return products;
   },
+  searchProduct: async (_: any, { text }: { text: string }) => {
+    const products = await prismaClient.product.findMany({
+      where: {
+        title: {
+          contains: text,
+          mode: "insensitive",
+        },
+      },
+      include: {
+        productSubcategory: {
+          include: {
+            productCategory: {
+              include: {
+                shop: true,
+              },
+            },
+          },
+        },
+      },
+      orderBy: {
+        _relevance: {
+          fields: ["title"],
+          search: text,
+          sort: "desc",
+        },
+      },
+    });
+    return products;
+  },
 };
 
 const mutations = {};

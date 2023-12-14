@@ -9,6 +9,7 @@ export default class Product {
       getPopularProducts: [Product]
       getRecentProducts: [Product]
       getAllProductOfShop(id: ID!): [Product]
+      searchProduct(text: String): [Product]
     `;
   }
   static mutation() {

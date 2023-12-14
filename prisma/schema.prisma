@@ -2,7 +2,8 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextSearch"]
 }
 
 datasource db {
@@ -54,23 +55,25 @@ model Account {
 }
 
 model User {
-  id                 String  @id @default(cuid())
-  name               String? @default(cuid())
+  id                 String    @id @default(cuid())
+  name               String?   @default(cuid())
   //reactCoinsCount    Int               @default(0)
-  phoneNumber        String? @unique @default("")
+  phoneNumber        String?   @unique @default("")
   imageUrl           String?
   backgroundImageUrl String?
-  defaultAddress     String? @default("")
+  defaultAddress     String?   @default("")
+  loginAs            UserRole? @default(USER)
 
   accountId String
   account   Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
 
-  cart          Cart[]
-  billingCards  BillingCard[]
-  orders        Order[]
-  Shop          Shop[]
-  RatingProduct RatingProduct[]
-  RatingShop    RatingShop[]
+  cart             Cart[]
+  billingCards     BillingCard[]
+  orders           Order[]
+  RatingProduct    RatingProduct[]
+  RatingShop       RatingShop[]
+  FavouriteProduct FavouriteProduct[]
+  Shop             Shop[]
 
   @@map("users")
 }
@@ -164,8 +167,8 @@ model Shop {
   shopName        String? @default("")
   imageUri        String? @default("")
 
-  idUser String
-  user   User   @relation(fields: [idUser], references: [id], onDelete: Cascade)
+  userId String?
+  user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   ProductCategory ProductCategory[]
   RatingShop      RatingShop[]
@@ -215,9 +218,10 @@ model Product {
   subcategoryId      String
   productSubcategory ProductSubcategory @relation(fields: [subcategoryId], references: [id], onDelete: Cascade)
 
-  ProductTag    ProductTag[]
-  ProductSize   ProductSize[]
-  RatingProduct RatingProduct[]
+  ProductTag       ProductTag[]
+  ProductSize      ProductSize[]
+  RatingProduct    RatingProduct[]
+  FavouriteProduct FavouriteProduct[]
 
   @@map("products")
 }
@@ -289,6 +293,14 @@ model ReportAccountDetail {
   account         Account       @relation(fields: [accountId], references: [id])
   reportAccountId String
   reportAccount   ReportAccount @relation(fields: [reportAccountId], references: [id])
+}
+
+model FavouriteProduct {
+  id        String  @id @default(cuid())
+  userId    String
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 }
 
 // model Session {
