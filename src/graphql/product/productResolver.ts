@@ -1,4 +1,5 @@
 import { prismaClient } from "../../lib/db";
+import { TagSearchInputType } from "./product";
 
 const queries = {
   getAllProducts: async () => {
@@ -109,7 +110,14 @@ const queries = {
 
     return products;
   },
-  searchProduct: async (_: any, { text }: { text: string }) => {
+  searchProduct: async (
+    _: any,
+    {
+      text,
+    }: {
+      text: string;
+    }
+  ) => {
     const products = await prismaClient.product.findMany({
       where: {
         title: {
@@ -136,6 +144,7 @@ const queries = {
         },
       },
     });
+
     return products;
   },
 };

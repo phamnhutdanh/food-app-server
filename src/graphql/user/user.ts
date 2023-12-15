@@ -11,7 +11,7 @@ export default class User {
   }
   static mutation() {
     return `#graphql
-
+        uploadImage(uri: String): Boolean
     `;
   }
 
