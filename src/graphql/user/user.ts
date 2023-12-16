@@ -11,12 +11,14 @@ export default class User {
   }
   static mutation() {
     return `#graphql
-        uploadImage(uri: String): Boolean
+        uploadImage(image: Upload!): Boolean
     `;
   }
 
   static typeDef() {
     return `#graphql
+      scalar Upload
+
       type User {
         id: String
         name: String
