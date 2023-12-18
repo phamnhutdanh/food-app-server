@@ -16,7 +16,7 @@ export async function getImageWithPublicIdCloudinary(
 
   await cloudinary.api
     .resource(publicId)
-    .then((value) => {
+    .then(async (value) => {
       url = value.url;
       return value.url;
     })
