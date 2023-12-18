@@ -1,6 +1,10 @@
 import { RESOLVER_TYPE } from "../resolvers";
 import { productResolver } from "./productResolver";
 
+export type TagSearchInputType = {
+  title: string;
+};
+
 export default class Product {
   static query() {
     return `#graphql
@@ -9,8 +13,10 @@ export default class Product {
       getPopularProducts: [Product]
       getRecentProducts: [Product]
       getAllProductOfShop(id: ID!): [Product]
+      searchProduct(text: String): [Product]
     `;
   }
+
   static mutation() {
     return `#graphql
 
@@ -19,6 +25,10 @@ export default class Product {
 
   static typeDef() {
     return `#graphql
+      input tagSearchInput {
+        title: String
+      }
+
       type Product {
         id: String
         title: String

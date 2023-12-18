@@ -1,4 +1,5 @@
 import { prismaClient } from "../../lib/db";
+import { getImageWithPublicIdCloudinary } from "../../lib/getImageWithPublicIdCloudinary";
 
 const queries = {
   getAllUsers: async () => {
@@ -36,6 +37,54 @@ const queries = {
   },
 };
 
-const mutations = {};
+const mutations = {
+  updateUser: async (
+    _: any,
+    {
+      userId,
+      name,
+      phone,
+      address,
+      publicId,
+    }: {
+      userId: string;
+      name: string;
+      phone: string;
+      address: string;
+      publicId: string;
+    }
+  ) => {
+    console.log("publicId: ", publicId);
+    if (publicId !== "" && publicId !== null) {
+      await getImageWithPublicIdCloudinary(publicId).then(
+        async (url: string) => {
+          console.log("URL: ", url);
+          await prismaClient.user.update({
+            where: {
+              id: userId,
+            },
+            data: {
+              name: name,
+              phoneNumber: phone,
+              defaultAddress: address,
+              imageUrl: url,
+            },
+          });
+        }
+      );
+    } else {
+      await prismaClient.user.update({
+        where: {
+          id: userId,
+        },
+        data: {
+          name: name,
+          phoneNumber: phone,
+          defaultAddress: address,
+        },
+      });
+    }
+  },
+};
 
 export const userResolver = { queries, mutations };
