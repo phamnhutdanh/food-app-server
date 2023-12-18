@@ -1,8 +1,6 @@
 import { v2 as cloudinary } from "cloudinary";
 
-export async function getImageWithPublicIdCloudinary(
-  publicId: string
-): Promise<string> {
+export function getImageWithPublicIdCloudinary(publicId: string): string {
   console.log("Upload image");
 
   cloudinary.config({
@@ -14,7 +12,7 @@ export async function getImageWithPublicIdCloudinary(
 
   let url = "";
   try {
-    await cloudinary.api.resource(publicId).then((value) => {
+    cloudinary.api.resource(publicId).then((value) => {
       url = value.url;
       return value.url;
     });

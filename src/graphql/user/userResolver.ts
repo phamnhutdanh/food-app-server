@@ -56,19 +56,19 @@ const mutations = {
   ) => {
     console.log("publicId: ", publicId);
     if (publicId !== "" || publicId !== null) {
-      getImageWithPublicIdCloudinary(publicId).then((url: string) => {
-        console.log("URL: ", url);
-        prismaClient.user.update({
-          where: {
-            id: userId,
-          },
-          data: {
-            name: name,
-            phoneNumber: phone,
-            defaultAddress: address,
-            imageUrl: url,
-          },
-        });
+      let url = getImageWithPublicIdCloudinary(publicId);
+      console.log("URL: ", url);
+
+      prismaClient.user.update({
+        where: {
+          id: userId,
+        },
+        data: {
+          name: name,
+          phoneNumber: phone,
+          defaultAddress: address,
+          imageUrl: url,
+        },
       });
     } else {
       await prismaClient.user.update({
