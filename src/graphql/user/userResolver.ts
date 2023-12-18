@@ -55,10 +55,10 @@ const mutations = {
     }
   ) => {
     console.log("publicId: ", publicId);
-    if (publicId !== "" || publicId !== null || publicId) {
+    if (publicId !== "" || publicId !== null) {
       await getImageWithPublicIdCloudinary(publicId).then(
         async (url: string) => {
-          console.log(url);
+          console.log("URL: ", url);
           await prismaClient.user.update({
             where: {
               id: userId,
