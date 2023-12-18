@@ -1,8 +1,5 @@
 import { prismaClient } from "../../lib/db";
-import {
-  processUpload,
-  uploadImageToCloudinary,
-} from "../../lib/uploadImageToCloudinary";
+import { getImageWithPublicIdCloudinary } from "../../lib/getImageWithPublicIdCloudinary";
 
 const queries = {
   getAllUsers: async () => {
@@ -41,10 +38,34 @@ const queries = {
 };
 
 const mutations = {
-  uploadImage: async (_: any, { image }: { image: any }) => {
-    const pictureUrl = await uploadImageToCloudinary(image);
-    console.log("Upload image");
-    console.log(pictureUrl);
+  updateUser: async (
+    _: any,
+    {
+      userId,
+      name,
+      phone,
+      address,
+      publicId,
+    }: {
+      userId: string;
+      name: string;
+      phone: string;
+      address: string;
+      publicId: string;
+    }
+  ) => {
+    const url = await getImageWithPublicIdCloudinary(publicId);
+    await prismaClient.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        name: name,
+        phoneNumber: phone,
+        defaultAddress: address,
+        imageUrl: url,
+      },
+    });
   },
 };
 

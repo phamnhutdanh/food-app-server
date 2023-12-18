@@ -1,30 +1,5 @@
 import { v2 as cloudinary } from "cloudinary";
 import { UploadApiOptions } from "cloudinary";
-import { createWriteStream } from "fs";
-
-const storeUpload = async ({
-  stream,
-  filename,
-}: {
-  stream: any;
-  filename: any;
-}): Promise<any> => {
-  // const path = `images/${shortid.generate()}`
-  const path = `images/test`;
-
-  return new Promise((resolve, reject) =>
-    stream
-      .pipe(createWriteStream(path))
-      .on("finish", () => resolve({ path }))
-      .on("error", reject)
-  );
-};
-
-export const processUpload = async (upload: any) => {
-  const { stream, filename, mimetype, encoding } = await upload;
-  const { path } = await storeUpload({ stream, filename });
-  return path;
-};
 
 export const uploadImageToCloudinary = async (imagePath: string) => {
   cloudinary.config({
