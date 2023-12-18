@@ -20,7 +20,7 @@ export async function getImageWithPublicIdCloudinary(
       url = value.url;
       return value.url;
     })
-    .finally(() => {
+    .finally(async () => {
       return url;
     })
     .catch((error) => console.log(error));
