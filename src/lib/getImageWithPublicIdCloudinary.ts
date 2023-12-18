@@ -13,18 +13,18 @@ export async function getImageWithPublicIdCloudinary(
   });
 
   let url = "";
-  try {
-    await cloudinary.api
-      .resource(publicId)
-      .then(async (value) => {
+  while (url === "") {
+    try {
+      await cloudinary.api.resource(publicId).then(async (value) => {
         url = value.url;
         return value.url;
-      })
-      .catch((error) => console.log(error));
+      });
 
-    return url;
-  } catch (error) {
-    console.error("updateImageToCloud: ", error);
+      return url;
+    } catch (error) {
+      console.error("updateImageToCloud: ", error);
+    }
   }
+
   return url;
 }
