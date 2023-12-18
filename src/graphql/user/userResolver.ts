@@ -54,18 +54,31 @@ const mutations = {
       publicId: string;
     }
   ) => {
-    const url = await getImageWithPublicIdCloudinary(publicId);
-    await prismaClient.user.update({
-      where: {
-        id: userId,
-      },
-      data: {
-        name: name,
-        phoneNumber: phone,
-        defaultAddress: address,
-        imageUrl: url,
-      },
-    });
+    if (publicId) {
+      const url = await getImageWithPublicIdCloudinary(publicId);
+      await prismaClient.user.update({
+        where: {
+          id: userId,
+        },
+        data: {
+          name: name,
+          phoneNumber: phone,
+          defaultAddress: address,
+          imageUrl: url,
+        },
+      });
+    } else {
+      await prismaClient.user.update({
+        where: {
+          id: userId,
+        },
+        data: {
+          name: name,
+          phoneNumber: phone,
+          defaultAddress: address,
+        },
+      });
+    }
   },
 };
 
