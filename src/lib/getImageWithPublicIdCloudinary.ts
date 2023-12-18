@@ -14,7 +14,8 @@ export async function getImageWithPublicIdCloudinary(
 
   let url = "";
   try {
-    url = await cloudinary.api.resource(publicId).then((value) => {
+    await cloudinary.api.resource(publicId).then((value) => {
+      url = value.url;
       return value.url;
     });
   } catch (error) {
