@@ -19,6 +19,7 @@ export async function getImageWithPublicIdCloudinary(
     });
   } catch (error) {
     console.error(error);
+  } finally {
+    return url;
   }
-  return url;
 }
