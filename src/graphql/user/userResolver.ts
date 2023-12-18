@@ -55,7 +55,7 @@ const mutations = {
     }
   ) => {
     console.log("publicId: ", publicId);
-    if (publicId !== "" || publicId !== null) {
+    if (publicId !== "" && publicId !== null) {
       await getImageWithPublicIdCloudinary(publicId).then(
         async (url: string) => {
           console.log("URL: ", url);
