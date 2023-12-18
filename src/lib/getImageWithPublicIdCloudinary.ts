@@ -12,7 +12,7 @@ export async function getImageWithPublicIdCloudinary(
     secure: true,
   });
 
-  let url = "";
+  let url = "none";
   try {
     url = await cloudinary.api.resource(publicId).then((value) => {
       return value.url;
