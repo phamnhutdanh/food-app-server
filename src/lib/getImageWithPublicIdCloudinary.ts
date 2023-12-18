@@ -1,6 +1,8 @@
 import { v2 as cloudinary } from "cloudinary";
 
-export function getImageWithPublicIdCloudinary(publicId: string): string {
+export async function getImageWithPublicIdCloudinary(
+  publicId: string
+): Promise<string> {
   console.log("Upload image");
 
   cloudinary.config({
@@ -11,14 +13,16 @@ export function getImageWithPublicIdCloudinary(publicId: string): string {
   });
 
   let url = "";
-  try {
-    cloudinary.api.resource(publicId).then((value) => {
+
+  await cloudinary.api
+    .resource(publicId)
+    .then((value) => {
       url = value.url;
       return value.url;
-    });
-  } catch (error) {
-    console.error(error);
-  } finally {
-    return url;
-  }
+    })
+    .finally(() => {
+      return url;
+    })
+    .catch((error) => console.log(error));
+  return url;
 }
