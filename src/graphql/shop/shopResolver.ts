@@ -25,23 +25,42 @@ const mutations = {
       shop: CreateShopAccountInputType;
     }
   ) => {
-    await prismaClient.shop
-      .create({
-        data: {
-          shopName: shop.shopName,
-          shopAddress: shop.shopAddress,
-          shopPhoneNumber: shop.shopPhoneNumber,
-          imageUri: shop.imageUri,
-          userId: shop.userId,
-        },
-      })
-      .then(() => {})
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.log("createShopAccount errorCode: ", errorCode);
-        console.log("createShopAccount errorMessage: ", errorMessage);
-      });
+    if (shop.imageUri !== "" && shop.imageUri !== null) {
+      await prismaClient.shop
+        .create({
+          data: {
+            shopName: shop.shopName,
+            shopAddress: shop.shopAddress,
+            shopPhoneNumber: shop.shopPhoneNumber,
+            imageUri: shop.imageUri,
+            userId: shop.userId,
+          },
+        })
+        .then(() => {})
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          console.log("createShopAccount errorCode: ", errorCode);
+          console.log("createShopAccount errorMessage: ", errorMessage);
+        });
+    } else {
+      await prismaClient.shop
+        .create({
+          data: {
+            shopName: shop.shopName,
+            shopAddress: shop.shopAddress,
+            shopPhoneNumber: shop.shopPhoneNumber,
+            userId: shop.userId,
+          },
+        })
+        .then(() => {})
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          console.log("createShopAccount errorCode: ", errorCode);
+          console.log("createShopAccount errorMessage: ", errorMessage);
+        });
+    }
   },
 };
 
