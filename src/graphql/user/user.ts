@@ -26,6 +26,7 @@ export default class User {
         backgroundImageUrl: String
         defaultAddress: String
         account: Account
+        loginAs: Role
       }
     `;
   }
