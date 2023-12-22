@@ -1,3 +1,4 @@
+import { UserRole } from "@prisma/client";
 import { prismaClient } from "../../lib/db";
 import { getImageWithPublicIdCloudinary } from "../../lib/getImageWithPublicIdCloudinary";
 
@@ -84,6 +85,25 @@ const mutations = {
         },
       });
     }
+  },
+  updateLoginRole: async (
+    _: any,
+    {
+      userId,
+      role,
+    }: {
+      userId: string;
+      role: UserRole;
+    }
+  ) => {
+    await prismaClient.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        loginAs: role,
+      },
+    });
   },
 };
 

@@ -40,7 +40,27 @@ const mutations = {
                 userId: shop.userId,
               },
             })
-            .then(() => {})
+            .then(async (shopAccount) => {
+              await prismaClient.user
+                .update({
+                  where: {
+                    id: shop.userId,
+                  },
+                  data: {
+                    loginAs: "USER",
+                  },
+                })
+                .then(async (user: any) => {
+                  await prismaClient.account.update({
+                    where: {
+                      id: user.accountId,
+                    },
+                    data: {
+                      role: "SHOP_OWNER",
+                    },
+                  });
+                });
+            })
             .catch((error) => {
               const errorCode = error.code;
               const errorMessage = error.message;
@@ -59,7 +79,27 @@ const mutations = {
             userId: shop.userId,
           },
         })
-        .then(() => {})
+        .then(async (shopAccount) => {
+          await prismaClient.user
+            .update({
+              where: {
+                id: shop.userId,
+              },
+              data: {
+                loginAs: "USER",
+              },
+            })
+            .then(async (user: any) => {
+              await prismaClient.account.update({
+                where: {
+                  id: user.accountId,
+                },
+                data: {
+                  role: "SHOP_OWNER",
+                },
+              });
+            });
+        })
         .catch((error) => {
           const errorCode = error.code;
           const errorMessage = error.message;
