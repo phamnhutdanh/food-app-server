@@ -1,4 +1,5 @@
 import { prismaClient } from "../../lib/db";
+import { getImageWithPublicIdCloudinary } from "../../lib/getImageWithPublicIdCloudinary";
 import { CreateShopAccountInputType } from "./shop";
 
 const queries = {
@@ -26,23 +27,28 @@ const mutations = {
     }
   ) => {
     if (shop.imageUri !== "" && shop.imageUri !== null) {
-      await prismaClient.shop
-        .create({
-          data: {
-            shopName: shop.shopName,
-            shopAddress: shop.shopAddress,
-            shopPhoneNumber: shop.shopPhoneNumber,
-            imageUri: shop.imageUri,
-            userId: shop.userId,
-          },
-        })
-        .then(() => {})
-        .catch((error) => {
-          const errorCode = error.code;
-          const errorMessage = error.message;
-          console.log("createShopAccount errorCode: ", errorCode);
-          console.log("createShopAccount errorMessage: ", errorMessage);
-        });
+      await getImageWithPublicIdCloudinary(shop.imageUri).then(
+        async (url: string) => {
+          console.log("URL: ", url);
+          await prismaClient.shop
+            .create({
+              data: {
+                shopName: shop.shopName,
+                shopAddress: shop.shopAddress,
+                shopPhoneNumber: shop.shopPhoneNumber,
+                imageUri: url,
+                userId: shop.userId,
+              },
+            })
+            .then(() => {})
+            .catch((error) => {
+              const errorCode = error.code;
+              const errorMessage = error.message;
+              console.log("createShopAccount errorCode: ", errorCode);
+              console.log("createShopAccount errorMessage: ", errorMessage);
+            });
+        }
+      );
     } else {
       await prismaClient.shop
         .create({
