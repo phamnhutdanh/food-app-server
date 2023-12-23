@@ -14,6 +14,7 @@ export default class Shop {
     return `#graphql
       getAllShop: [Shop]
       getShopById(id: ID!): Shop
+      getShopInfoByFirebaseUID(id: ID!): Shop
     `;
   }
   static mutation() {

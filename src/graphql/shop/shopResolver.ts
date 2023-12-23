@@ -15,6 +15,26 @@ const queries = {
     });
     return shop;
   },
+  getShopInfoByFirebaseUID: async (_: any, { id }: { id: string }) => {
+    const shop = await prismaClient.shop.findFirst({
+      where: {
+        user: {
+          account: {
+            firebaseUID: id,
+          },
+        },
+      },
+      include: {
+        user: {
+          include: {
+            account: true,
+          },
+        },
+      },
+    });
+
+    return shop;
+  },
 };
 
 const mutations = {
