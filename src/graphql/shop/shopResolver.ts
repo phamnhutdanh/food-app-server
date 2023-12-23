@@ -145,7 +145,7 @@ const mutations = {
             },
             data: {
               shopName: shop.shopName,
-              shopPhoneNumber: shop.shopAddress,
+              shopPhoneNumber: shop.shopPhoneNumber,
               shopAddress: shop.shopAddress,
               imageUri: url,
             },
@@ -159,7 +159,7 @@ const mutations = {
         },
         data: {
           shopName: shop.shopName,
-          shopPhoneNumber: shop.shopAddress,
+          shopPhoneNumber: shop.shopPhoneNumber,
           shopAddress: shop.shopAddress,
         },
       });
