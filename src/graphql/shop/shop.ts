@@ -39,6 +39,7 @@ export default class Shop {
         shopPhoneNumber: String
         shopName: String
         imageUri: String
+        userId: String
         user: User
       }
     `;
