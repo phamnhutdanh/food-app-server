@@ -1,6 +1,6 @@
 import { prismaClient } from "../../lib/db";
 import { getImageWithPublicIdCloudinary } from "../../lib/getImageWithPublicIdCloudinary";
-import { CreateShopAccountInputType } from "./shop";
+import { CreateShopAccountInputType, UpdateShopAccountInputType } from "./shop";
 
 const queries = {
   getAllShop: async () => {},
@@ -126,6 +126,43 @@ const mutations = {
           console.log("createShopAccount errorCode: ", errorCode);
           console.log("createShopAccount errorMessage: ", errorMessage);
         });
+    }
+  },
+  updateShopAccount: async (
+    _: any,
+    {
+      shop,
+    }: {
+      shop: UpdateShopAccountInputType;
+    }
+  ) => {
+    if (shop.imagePublicId !== "" && shop.imagePublicId !== null) {
+      await getImageWithPublicIdCloudinary(shop.imagePublicId).then(
+        async (url: string) => {
+          await prismaClient.shop.update({
+            where: {
+              id: shop.shopId,
+            },
+            data: {
+              shopName: shop.shopName,
+              shopPhoneNumber: shop.shopAddress,
+              shopAddress: shop.shopAddress,
+              imageUri: url,
+            },
+          });
+        }
+      );
+    } else {
+      await prismaClient.shop.update({
+        where: {
+          id: shop.shopId,
+        },
+        data: {
+          shopName: shop.shopName,
+          shopPhoneNumber: shop.shopAddress,
+          shopAddress: shop.shopAddress,
+        },
+      });
     }
   },
 };
