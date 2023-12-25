@@ -67,14 +67,15 @@ model User {
   accountId String
   account   Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
 
-  cart             Cart[]
-  billingCards     BillingCard[]
-  orders           Order[]
+  cart         Cart[]
+  billingCards BillingCard[]
+
   RatingProduct    RatingProduct[]
   RatingShop       RatingShop[]
   FavouriteProduct FavouriteProduct[]
   Shop             Shop[]
   Notification     Notification[]
+  OrderProduct     OrderProduct[]
 
   @@map("users")
 }
@@ -120,41 +121,25 @@ model BillingCard {
   @@map("billingCards")
 }
 
-model Order {
-  id              String      @id @default(cuid())
+model OrderProduct {
+  id String @id @default(cuid())
+
+  fullPrice       Float
+  count           Int
   deliveryAddress String
-  // cutleryCount    Int            @default(0)
   totalCost       Float
   // productsCost    Float
   // deliveryCost         Float
   // serviceFee           Float
   status          OrderStatus @default(PENDING)
-  // recipientPhoneNumber String
-  // recipientName        String
   commentary      String?     @default("")
-  createdAt       DateTime    @default(now())
-  updatedAt       DateTime    @updatedAt
   deliveredAt     DateTime
 
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId String
-
-  products OrderProduct[]
-
-  @@map("orders")
-}
-
-model OrderProduct {
-  id        String   @id @default(cuid())
-  title     String?  @default("")
-  fullPrice Float
-  count     Int
-  imageUri  String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  orderId       String
-  order         Order       @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId        String
   productSizeId String
   productSize   ProductSize @relation(fields: [productSizeId], references: [id])
 

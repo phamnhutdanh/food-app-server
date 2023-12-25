@@ -1,61 +1,92 @@
 import { prismaClient } from "../../lib/db";
-import { OrderInputType } from "../order/order";
+
 import { OrderProductInputType } from "./orderProduct";
 
-const queries = {};
+const queries = {
+  getOnGoingOrdersOfUser: async (
+    _: any,
+    {
+      userId,
+    }: {
+      userId: string;
+    }
+  ) => {
+    const orders = await prismaClient.orderProduct.findMany({
+      where: {
+        AND: [
+          {
+            userId: userId,
+          },
+          {
+            OR: [
+              {
+                status: "PENDING",
+              },
+              {
+                status: "ON_THE_WAY",
+              },
+            ],
+          },
+        ],
+      },
+    });
+    return orders;
+  },
+  getCompleteOrdersOfUser: async (
+    _: any,
+    {
+      userId,
+    }: {
+      userId: string;
+    }
+  ) => {
+    const orders = await prismaClient.orderProduct.findMany({
+      where: {
+        AND: [
+          {
+            userId: userId,
+          },
+          {
+            OR: [
+              {
+                status: "DELIVERED",
+              },
+              {
+                status: "CANCELED",
+              },
+            ],
+          },
+        ],
+      },
+    });
+    return orders;
+  },
+};
 
 const mutations = {
   createOrderProduct: async (
     _: any,
     {
-      order,
       orderProducts,
     }: {
-      order: OrderInputType;
       orderProducts: OrderProductInputType[];
     }
   ) => {
-    await prismaClient.order
-      .create({
+    await orderProducts.forEach(async (orderProduct) => {
+      await prismaClient.orderProduct.create({
         data: {
-          deliveredAt: order.deliveredAt,
-          deliveryAddress: order.deliveryAddress,
-          totalCost: order.totalCost,
+          fullPrice: orderProduct.fullPrice,
+          count: orderProduct.count,
+          deliveryAddress: orderProduct.deliveryAddress,
+          totalCost: orderProduct.totalCost,
           status: "PENDING",
-          commentary: order.commentary,
-          userId: order.userId,
+          commentary: orderProduct.commentary,
+          deliveredAt: orderProduct.deliveredAt,
+          userId: orderProduct.userId,
+          productSizeId: orderProduct.productSizeId,
         },
-      })
-      .then(async (order) => {
-        const orderId = order.id;
-        orderProducts.forEach(async (item) => {
-          await prismaClient.orderProduct
-            .create({
-              data: {
-                orderId: orderId,
-                fullPrice: item.fullPrice,
-                count: item.count,
-                productSizeId: item.productSizeId,
-              },
-            })
-            .then(async (orderProduct) => {
-              await prismaClient.cartProduct.deleteMany({
-                where: {
-                  AND: [
-                    {
-                      productSizeId: orderProduct.productSizeId,
-                    },
-                    {
-                      cart: {
-                        userId: order.userId,
-                      },
-                    },
-                  ],
-                },
-              });
-            });
-        });
       });
+    });
   },
 };
 
