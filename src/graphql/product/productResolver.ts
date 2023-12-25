@@ -1,6 +1,10 @@
 import { prismaClient } from "../../lib/db";
 import { getImageWithPublicIdCloudinary } from "../../lib/getImageWithPublicIdCloudinary";
-import { CreateProductInputType, TagSearchInputType } from "./product";
+import {
+  CreateProductInputType,
+  TagSearchInputType,
+  UpdateProductInputType,
+} from "./product";
 
 const queries = {
   getAllProducts: async () => {
@@ -202,6 +206,46 @@ const mutations = {
         id: productId,
       },
     });
+  },
+  updateProduct: async (
+    _: any,
+    {
+      productInput,
+    }: {
+      productInput: UpdateProductInputType;
+    }
+  ) => {
+    if (
+      productInput.imagePublicId !== "" &&
+      productInput.imagePublicId !== null
+    ) {
+      await getImageWithPublicIdCloudinary(productInput.imagePublicId).then(
+        async (url: string) => {
+          await prismaClient.product.update({
+            where: {
+              id: productInput.productId,
+            },
+            data: {
+              subcategoryId: productInput.subcategoryId,
+              imageUri: url,
+              title: productInput.title,
+              description: productInput.description,
+            },
+          });
+        }
+      );
+    } else {
+      await prismaClient.product.update({
+        where: {
+          id: productInput.productId,
+        },
+        data: {
+          subcategoryId: productInput.subcategoryId,
+          title: productInput.title,
+          description: productInput.description,
+        },
+      });
+    }
   },
 };
 

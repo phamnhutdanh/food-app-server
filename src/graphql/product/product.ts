@@ -5,6 +5,14 @@ export type TagSearchInputType = {
   title: string;
 };
 
+export type UpdateProductInputType = {
+  subcategoryId: string;
+  imagePublicId: string;
+  title: string;
+  description: string;
+  productId: string;
+};
+
 export type CreateProductInputType = {
   subcategoryId: string;
   imagePublicId: string;
@@ -30,11 +38,20 @@ export default class Product {
     return `#graphql
       createProduct(productInput: createProductInput!): ID 
       deleteProduct(productId: ID!): ID
+      updateProduct(productInput: updateProductInput!):ID
     `;
   }
 
   static typeDef() {
     return `#graphql
+      input updateProductInput {
+          subcategoryId: String
+          imagePublicId: String
+          title: String
+          description: String
+          productId: String
+      }
+
       input createProductInput {
           subcategoryId: String
           imagePublicId: String
