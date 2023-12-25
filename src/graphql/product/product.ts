@@ -5,6 +5,15 @@ export type TagSearchInputType = {
   title: string;
 };
 
+export type CreateProductInputType = {
+  subcategoryId: string;
+  imagePublicId: string;
+  title: string;
+  price: number;
+  sizeTitle: string;
+  description: string;
+};
+
 export default class Product {
   static query() {
     return `#graphql
@@ -19,12 +28,21 @@ export default class Product {
 
   static mutation() {
     return `#graphql
-
+      createProduct(productInput: createProductInput!): ID 
     `;
   }
 
   static typeDef() {
     return `#graphql
+      input createProductInput {
+          subcategoryId: String
+          imagePublicId: String
+          title: String
+          price: Float
+          sizeTitle: String
+          description: String
+      }
+    
       input tagSearchInput {
         title: String
       }

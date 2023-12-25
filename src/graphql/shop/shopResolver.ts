@@ -80,6 +80,14 @@ const mutations = {
                     },
                   });
                 });
+
+              await prismaClient.productCategory.create({
+                data: {
+                  title: `category_${shopAccount.id}`,
+                  description: "description",
+                  shopId: shopAccount.id,
+                },
+              });
             })
             .catch((error) => {
               const errorCode = error.code;
@@ -119,6 +127,14 @@ const mutations = {
                 },
               });
             });
+
+          await prismaClient.productCategory.create({
+            data: {
+              title: `category_${shopAccount.id}`,
+              description: "description",
+              shopId: shopAccount.id,
+            },
+          });
         })
         .catch((error) => {
           const errorCode = error.code;

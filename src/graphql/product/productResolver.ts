@@ -1,5 +1,6 @@
 import { prismaClient } from "../../lib/db";
-import { TagSearchInputType } from "./product";
+import { getImageWithPublicIdCloudinary } from "../../lib/getImageWithPublicIdCloudinary";
+import { CreateProductInputType, TagSearchInputType } from "./product";
 
 const queries = {
   getAllProducts: async () => {
@@ -149,6 +150,45 @@ const queries = {
   },
 };
 
-const mutations = {};
+const mutations = {
+  createProduct: async (
+    _: any,
+    {
+      productInput,
+    }: {
+      productInput: CreateProductInputType;
+    }
+  ) => {
+    await getImageWithPublicIdCloudinary(productInput.imagePublicId).then(
+      async (url: string) => {
+        await prismaClient.product
+          .create({
+            data: {
+              title: productInput.title,
+              imageUri: url,
+              fullPrice: productInput.price,
+              description: productInput.description,
+              subcategoryId: productInput.subcategoryId,
+            },
+          })
+          .then(async (product) => {
+            await prismaClient.productSize.create({
+              data: {
+                title: productInput.sizeTitle,
+                fullPrice: productInput.price,
+                productId: product.id,
+              },
+            });
+          })
+          .catch((error) => {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            console.log("createProduct errorCode: ", errorCode);
+            console.log("createProduct errorMessage: ", errorMessage);
+          });
+      }
+    );
+  },
+};
 
 export const productResolver = { queries, mutations };

@@ -4,8 +4,8 @@ import { productCategoryResolver } from "./productCategoryResolver";
 export default class ProductCategory {
   static query() {
     return `#graphql
-       getAllProductCategories: [ProductCategory]
-       getProductCategoryById(id: ID!): ProductCategory
+      getAllProductCategories: [ProductCategory]
+      getProductCategoryById(id: ID!): ProductCategory
     `;
   }
   static mutation() {
