@@ -189,6 +189,20 @@ const mutations = {
       }
     );
   },
+  deleteProduct: async (
+    _: any,
+    {
+      productId,
+    }: {
+      productId: string;
+    }
+  ) => {
+    await prismaClient.product.delete({
+      where: {
+        id: productId,
+      },
+    });
+  },
 };
 
 export const productResolver = { queries, mutations };

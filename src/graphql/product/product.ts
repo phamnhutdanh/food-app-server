@@ -29,6 +29,7 @@ export default class Product {
   static mutation() {
     return `#graphql
       createProduct(productInput: createProductInput!): ID 
+      deleteProduct(productId: ID!): ID
     `;
   }
 
