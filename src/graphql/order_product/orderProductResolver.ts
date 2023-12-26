@@ -29,6 +29,13 @@ const queries = {
           },
         ],
       },
+      include: {
+        productSize: {
+          include: {
+            product: true,
+          },
+        },
+      },
     });
     return orders;
   },
@@ -58,6 +65,13 @@ const queries = {
           },
         ],
       },
+      include: {
+        productSize: {
+          include: {
+            product: true,
+          },
+        },
+      },
     });
     return orders;
   },
@@ -73,6 +87,21 @@ const mutations = {
     }
   ) => {
     await orderProducts.forEach(async (orderProduct) => {
+      await prismaClient.cartProduct.deleteMany({
+        where: {
+          AND: [
+            {
+              productSizeId: orderProduct.productSizeId,
+            },
+            {
+              cart: {
+                userId: orderProduct.userId,
+              },
+            },
+          ],
+        },
+      });
+
       await prismaClient.orderProduct.create({
         data: {
           fullPrice: orderProduct.fullPrice,

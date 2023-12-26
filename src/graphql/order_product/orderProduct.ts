@@ -42,10 +42,17 @@ export default class OrderProduct {
         id: String
         fullPrice: Float
         count: Int
+        deliveryAddress: String
+        totalCost: Float
+        status: OrderStatus
+        deliveredAt: String
         createdAt: String
         updatedAt: String
-        orderId: String
+        commentary: String
         productSizeId: String
+        productSize: ProductSize
+        userId: String
+        user: User
      }
     `;
   }
