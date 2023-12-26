@@ -97,7 +97,19 @@ const queries = {
       include: {
         productSize: {
           include: {
-            product: true,
+            product: {
+              include: {
+                productSubcategory: {
+                  include: {
+                    productCategory: {
+                      include: {
+                        shop: true,
+                      },
+                    },
+                  },
+                },
+              },
+            },
           },
         },
         user: {
