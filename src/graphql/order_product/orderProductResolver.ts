@@ -100,7 +100,11 @@ const queries = {
             product: true,
           },
         },
-        user: true,
+        user: {
+          include: {
+            account: true,
+          },
+        },
       },
     });
 
