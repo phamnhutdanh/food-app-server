@@ -23,6 +23,8 @@ export default class OrderProduct {
   static mutation() {
     return `#graphql
         createOrderProduct(orderProducts: [orderProductInput!]!): ID
+        cancelOrder(orderId: ID!): ID
+        changeOrderStatus(orderId: ID!, status: OrderStatus!): ID
     `;
   }
 

@@ -1,3 +1,4 @@
+import { OrderStatus } from "@prisma/client";
 import { prismaClient } from "../../lib/db";
 
 import { OrderProductInputType } from "./orderProduct";
@@ -36,6 +37,9 @@ const queries = {
           },
         },
       },
+      orderBy: {
+        createdAt: "desc",
+      },
     });
     return orders;
   },
@@ -71,6 +75,9 @@ const queries = {
             product: true,
           },
         },
+      },
+      orderBy: {
+        createdAt: "desc",
       },
     });
     return orders;
@@ -139,6 +146,42 @@ const mutations = {
           productSizeId: orderProduct.productSizeId,
         },
       });
+    });
+  },
+  cancelOrder: async (
+    _: any,
+    {
+      orderId,
+    }: {
+      orderId: string;
+    }
+  ) => {
+    await prismaClient.orderProduct.update({
+      where: {
+        id: orderId,
+      },
+      data: {
+        status: "CANCELED",
+      },
+    });
+  },
+  changeOrderStatus: async (
+    _: any,
+    {
+      orderId,
+      status,
+    }: {
+      orderId: string;
+      status: OrderStatus;
+    }
+  ) => {
+    await prismaClient.orderProduct.update({
+      where: {
+        id: orderId,
+      },
+      data: {
+        status: status,
+      },
     });
   },
 };
