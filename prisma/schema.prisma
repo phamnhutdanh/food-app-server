@@ -74,8 +74,9 @@ model User {
   RatingShop       RatingShop[]
   FavouriteProduct FavouriteProduct[]
   Shop             Shop[]
-  Notification     Notification[]
-  OrderProduct     OrderProduct[]
+
+  OrderProduct        OrderProduct[]
+  NotificationAccount NotificationAccount[]
 
   @@map("users")
 }
@@ -156,9 +157,9 @@ model Shop {
   userId String?
   user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  ProductCategory ProductCategory[]
-  RatingShop      RatingShop[]
-  Notification    Notification[]
+  ProductCategory     ProductCategory[]
+  RatingShop          RatingShop[]
+  NotificationAccount NotificationAccount[]
 
   @@map("shops")
 }
@@ -264,8 +265,9 @@ model ReportAccount {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  reporterId          String
-  reporter            Account               @relation(fields: [reporterId], references: [id])
+  accountReportedId String
+  accountReported   Account @relation(fields: [accountReportedId], references: [id])
+
   ReportAccountDetail ReportAccountDetail[]
 }
 
@@ -276,8 +278,8 @@ model ReportAccountDetail {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  accountId       String
-  account         Account       @relation(fields: [accountId], references: [id])
+  reporterId      String
+  reporter        Account       @relation(fields: [reporterId], references: [id])
   reportAccountId String
   reportAccount   ReportAccount @relation(fields: [reportAccountId], references: [id])
 }
@@ -290,7 +292,7 @@ model FavouriteProduct {
   product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 }
 
-model Notification {
+model NotificationAccount {
   id        String   @id @default(cuid())
   title     String
   message   String
