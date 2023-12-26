@@ -122,6 +122,100 @@ const queries = {
 
     return orderProduct;
   },
+  getOnGoingOrdersOfShop: async (
+    _: any,
+    {
+      shopId,
+    }: {
+      shopId: string;
+    }
+  ) => {
+    const orders = await prismaClient.orderProduct.findMany({
+      where: {
+        AND: [
+          {
+            productSize: {
+              product: {
+                productSubcategory: {
+                  productCategory: {
+                    shopId: shopId,
+                  },
+                },
+              },
+            },
+          },
+          {
+            OR: [
+              {
+                status: "PENDING",
+              },
+              {
+                status: "ON_THE_WAY",
+              },
+            ],
+          },
+        ],
+      },
+      include: {
+        productSize: {
+          include: {
+            product: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+    return orders;
+  },
+  getCompleteOrdersOfShop: async (
+    _: any,
+    {
+      shopId,
+    }: {
+      shopId: string;
+    }
+  ) => {
+    const orders = await prismaClient.orderProduct.findMany({
+      where: {
+        AND: [
+          {
+            productSize: {
+              product: {
+                productSubcategory: {
+                  productCategory: {
+                    shopId: shopId,
+                  },
+                },
+              },
+            },
+          },
+          {
+            OR: [
+              {
+                status: "DELIVERED",
+              },
+              {
+                status: "CANCELED",
+              },
+            ],
+          },
+        ],
+      },
+      include: {
+        productSize: {
+          include: {
+            product: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+    return orders;
+  },
 };
 
 const mutations = {

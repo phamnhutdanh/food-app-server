@@ -18,13 +18,15 @@ export default class OrderProduct {
       getOnGoingOrdersOfUser(userId: ID!): [OrderProduct]
       getCompleteOrdersOfUser(userId: ID!): [OrderProduct]
       getOrderById(id: ID!): OrderProduct
+      getOnGoingOrdersOfShop(shopId: ID!): [OrderProduct]
+      getCompleteOrdersOfShop(shopId: ID!): [OrderProduct]
     `;
   }
   static mutation() {
     return `#graphql
-        createOrderProduct(orderProducts: [orderProductInput!]!): ID
-        cancelOrder(orderId: ID!): ID
-        changeOrderStatus(orderId: ID!, status: OrderStatus!): ID
+      createOrderProduct(orderProducts: [orderProductInput!]!): ID
+      cancelOrder(orderId: ID!): ID
+      changeOrderStatus(orderId: ID!, status: OrderStatus!): ID
     `;
   }
 
