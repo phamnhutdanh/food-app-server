@@ -75,6 +75,30 @@ const queries = {
     });
     return orders;
   },
+  getOrderById: async (
+    _: any,
+    {
+      id,
+    }: {
+      id: string;
+    }
+  ) => {
+    const orderProduct = await prismaClient.orderProduct.findUnique({
+      where: {
+        id: id,
+      },
+      include: {
+        productSize: {
+          include: {
+            product: true,
+          },
+        },
+        user: true,
+      },
+    });
+
+    return orderProduct;
+  },
 };
 
 const mutations = {

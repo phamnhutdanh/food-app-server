@@ -17,6 +17,7 @@ export default class OrderProduct {
     return `#graphql
       getOnGoingOrdersOfUser(userId: ID!): [OrderProduct]
       getCompleteOrdersOfUser(userId: ID!): [OrderProduct]
+      getOrderById(id: ID!): OrderProduct
     `;
   }
   static mutation() {
