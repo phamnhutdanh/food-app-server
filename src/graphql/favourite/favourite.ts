@@ -34,7 +34,7 @@ export default class FavouriteProduct {
 
       input removeFromFavouriteInput {
         userId: String
-        productIdL String
+        productId: String
       }
 
       type FavouriteProduct {
