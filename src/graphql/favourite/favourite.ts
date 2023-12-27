@@ -10,6 +10,7 @@ export default class FavouriteProduct {
   static query() {
     return `#graphql
        getFavouriteProductsOfUser(userId: ID!): [Product]
+       getLimitFavouriteProductsOfUser(userId: ID!, takeNum: Float): [Product]
     `;
   }
   static mutation() {
