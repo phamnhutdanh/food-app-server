@@ -67,6 +67,20 @@ const queries = {
 
     return await favourites.map((item) => item.product);
   },
+  checkFavouriteInput: async (
+    _: any,
+    { favouriteInput }: { favouriteInput: CreateFavouriteInputType }
+  ) => {
+    const favourite = await prismaClient.favouriteProduct.findUnique({
+      where: {
+        userId_productId: {
+          userId: favouriteInput.userId,
+          productId: favouriteInput.productId,
+        },
+      },
+    });
+    return favourite !== null;
+  },
 };
 
 const mutations = {

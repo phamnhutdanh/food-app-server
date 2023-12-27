@@ -16,6 +16,7 @@ export default class FavouriteProduct {
     return `#graphql
        getFavouriteProductsOfUser(userId: ID!): [Product]
        getLimitFavouriteProductsOfUser(userId: ID!, takeNum: Float): [Product]
+       checkFavouriteInput(favouriteInput: createFavouriteInput!): Boolean
     `;
   }
   static mutation() {
