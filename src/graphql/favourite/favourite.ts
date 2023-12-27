@@ -6,6 +6,11 @@ export type CreateFavouriteInputType = {
   productId: string;
 };
 
+export type RemoveFromFavouriteInputType = {
+  userId: string;
+  productId: string;
+};
+
 export default class FavouriteProduct {
   static query() {
     return `#graphql
@@ -16,6 +21,7 @@ export default class FavouriteProduct {
   static mutation() {
     return `#graphql
         addToFavourite(favouriteInput: createFavouriteInput!): ID
+        removeFromFavourite(favouriteInput: removeFromFavouriteInput!): ID
     `;
   }
 
@@ -24,6 +30,11 @@ export default class FavouriteProduct {
       input createFavouriteInput {
         userId: String
         productId: String
+      }
+
+      input removeFromFavouriteInput {
+        userId: String
+        productIdL String
       }
 
       type FavouriteProduct {

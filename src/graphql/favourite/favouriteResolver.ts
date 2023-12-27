@@ -1,5 +1,8 @@
 import { prismaClient } from "../../lib/db";
-import { CreateFavouriteInputType } from "./favourite";
+import {
+  CreateFavouriteInputType,
+  RemoveFromFavouriteInputType,
+} from "./favourite";
 const queries = {
   getFavouriteProductsOfUser: async (
     _: any,
@@ -75,6 +78,19 @@ const mutations = {
       data: {
         productId: favouriteInput.productId,
         userId: favouriteInput.userId,
+      },
+    });
+  },
+  removeFromFavourite: async (
+    _: any,
+    { favouriteInput }: { favouriteInput: RemoveFromFavouriteInputType }
+  ) => {
+    await prismaClient.favouriteProduct.delete({
+      where: {
+        userId_productId: {
+          userId: favouriteInput.userId,
+          productId: favouriteInput.productId,
+        },
       },
     });
   },
