@@ -12,6 +12,7 @@ const queries = {
       },
       include: {
         user: true,
+        shop: true,
       },
     });
     return ratings;
