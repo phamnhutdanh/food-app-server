@@ -11,7 +11,7 @@ export type CreateRatingProductInputType = {
 export default class RatingProduct {
   static query() {
     return `#graphql
-        getAllRatingOfProduct(productId: ID!): RatingProduct
+        getAllRatingOfProduct(productId: ID!): [RatingProduct]
     `;
   }
   static mutation() {
