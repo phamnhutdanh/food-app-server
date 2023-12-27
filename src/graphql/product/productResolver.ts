@@ -168,8 +168,15 @@ const queries = {
       _avg: {
         score: true,
       },
+      _count: {
+        score: true,
+      },
     });
-    return aggregations._avg.score;
+    const res = {
+      avgRating: Math.round(aggregations._avg.score! * 100) / 100,
+      countRating: aggregations._count.score,
+    };
+    return res;
   },
 };
 

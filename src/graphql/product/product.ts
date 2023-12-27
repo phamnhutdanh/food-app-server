@@ -31,7 +31,7 @@ export default class Product {
       getRecentProducts: [Product]
       getAllProductOfShop(id: ID!): [Product]
       searchProduct(text: String): [Product]
-      getAverageScore(productId: ID!): Float
+      getAverageScore(productId: ID!): AggregateRatingProduct
     `;
   }
 
@@ -45,6 +45,11 @@ export default class Product {
 
   static typeDef() {
     return `#graphql
+      type AggregateRatingProduct {
+          avgRating: Float
+          countRating: Float
+      }
+
       input updateProductInput {
           subcategoryId: String
           imagePublicId: String
