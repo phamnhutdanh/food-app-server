@@ -5,6 +5,7 @@ export type CreateRatingProductInputType = {
   score: number;
   comment: string;
   userId: string;
+  shopId: string;
   productId: string;
 };
 
@@ -26,6 +27,7 @@ export default class RatingProduct {
         score: Float
         comment: String
         userId: String
+        shopId: String
         productId: String
       }
 
@@ -35,6 +37,8 @@ export default class RatingProduct {
         comment: String
         userId: String
         user: User
+        shopId: String
+        shop: Shop
         productId: String
         product: Product
         createdAt: String

@@ -31,6 +31,7 @@ export default class Product {
       getRecentProducts: [Product]
       getAllProductOfShop(id: ID!): [Product]
       searchProduct(text: String): [Product]
+      getAverageScore(productId: ID!): Float
     `;
   }
 
@@ -75,6 +76,7 @@ export default class Product {
         productSubcategory: ProductSubCategory
         ProductSize: [ProductSize]
         ProductTag: [ProductTag]
+        RatingProduct: [RatingProduct]
      }
     `;
   }

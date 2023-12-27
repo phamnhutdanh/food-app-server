@@ -29,6 +29,7 @@ const queries = {
         id: id,
       },
       include: {
+        RatingProduct: true,
         ProductSize: true,
         ProductTag: true,
         productSubcategory: {
@@ -151,6 +152,24 @@ const queries = {
     });
 
     return products;
+  },
+  getAverageScore: async (
+    _: any,
+    {
+      productId,
+    }: {
+      productId: string;
+    }
+  ) => {
+    const aggregations = await prismaClient.ratingProduct.aggregate({
+      where: {
+        productId: productId,
+      },
+      _avg: {
+        score: true,
+      },
+    });
+    return aggregations._avg.score;
   },
 };
 

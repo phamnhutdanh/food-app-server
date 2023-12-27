@@ -27,14 +27,36 @@ const mutations = {
       ratingInput: CreateRatingProductInputType;
     }
   ) => {
-    await prismaClient.ratingProduct.create({
-      data: {
-        score: ratingInput.score,
-        comment: ratingInput.comment,
-        productId: ratingInput.productId,
-        userId: ratingInput.userId,
-      },
-    });
+    if (ratingInput.userId !== null && ratingInput.userId !== "") {
+      await prismaClient.ratingProduct.create({
+        data: {
+          score: ratingInput.score,
+          comment: ratingInput.comment,
+          productId: ratingInput.productId,
+          userId: ratingInput.userId,
+        },
+      });
+      return;
+    } else if (ratingInput.shopId !== null && ratingInput.shopId !== "") {
+      await prismaClient.ratingProduct.create({
+        data: {
+          score: ratingInput.score,
+          comment: ratingInput.comment,
+          productId: ratingInput.productId,
+          shopId: ratingInput.shopId,
+        },
+      });
+      return;
+    } else {
+      await prismaClient.ratingProduct.create({
+        data: {
+          score: ratingInput.score,
+          comment: ratingInput.comment,
+          productId: ratingInput.productId,
+        },
+      });
+      return;
+    }
   },
 };
 

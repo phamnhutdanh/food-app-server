@@ -70,13 +70,13 @@ model User {
   cart         Cart[]
   billingCards BillingCard[]
 
-  RatingProduct    RatingProduct[]
   RatingShop       RatingShop[]
   FavouriteProduct FavouriteProduct[]
   Shop             Shop[]
 
   OrderProduct        OrderProduct[]
   NotificationAccount NotificationAccount[]
+  RatingProduct       RatingProduct[]
 
   @@map("users")
 }
@@ -160,6 +160,7 @@ model Shop {
   ProductCategory     ProductCategory[]
   RatingShop          RatingShop[]
   NotificationAccount NotificationAccount[]
+  RatingProduct       RatingProduct[]
 
   @@map("shops")
 }
@@ -240,8 +241,10 @@ model RatingProduct {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  userId    String
-  user      User    @relation(fields: [userId], references: [id])
+  userId    String?
+  user      User?   @relation(fields: [userId], references: [id])
+  shopId    String?
+  shop      Shop?   @relation(fields: [shopId], references: [id])
   productId String
   product   Product @relation(fields: [productId], references: [id])
 }
