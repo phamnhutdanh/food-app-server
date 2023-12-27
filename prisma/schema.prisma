@@ -76,7 +76,7 @@ model User {
 
   OrderProduct        OrderProduct[]
   NotificationAccount NotificationAccount[]
-  RatingProduct       RatingProduct[]
+  RatingProduct       RatingProduct?
 
   @@map("users")
 }
@@ -160,7 +160,6 @@ model Shop {
   ProductCategory     ProductCategory[]
   RatingShop          RatingShop[]
   NotificationAccount NotificationAccount[]
-  RatingProduct       RatingProduct[]
 
   @@map("shops")
 }
@@ -235,18 +234,17 @@ model ProductTag {
 }
 
 model RatingProduct {
-  id        String   @id @default(cuid())
   score     Int
   comment   String?  @default("")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  userId    String?
-  user      User?   @relation(fields: [userId], references: [id])
-  shopId    String?
-  shop      Shop?   @relation(fields: [shopId], references: [id])
+  userId    String  @unique
+  user      User    @relation(fields: [userId], references: [id])
   productId String
   product   Product @relation(fields: [productId], references: [id])
+
+  @@id([userId, productId])
 }
 
 model RatingShop {
