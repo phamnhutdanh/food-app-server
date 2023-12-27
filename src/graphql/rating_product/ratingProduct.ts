@@ -30,7 +30,6 @@ export default class RatingProduct {
       }
 
       type RatingProduct {
-        id: String
         score: Float
         comment: String
         userId: String

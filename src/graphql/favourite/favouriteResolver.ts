@@ -5,16 +5,32 @@ const queries = {
     _: any,
     { userId }: { userId: string }
   ) => {
-    const products = await prismaClient.favouriteProduct
+    const favourites = await prismaClient.favouriteProduct
       .findMany({
         where: {
           userId: userId,
+        },
+        include: {
+          product: {
+            include: {
+              productSubcategory: {
+                include: {
+                  productCategory: {
+                    include: {
+                      shop: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
         },
       })
       .then(async (favouriteProducts) => {
         return favouriteProducts;
       });
-    return products;
+
+    return await favourites.map((item) => item.product);
   },
 };
 

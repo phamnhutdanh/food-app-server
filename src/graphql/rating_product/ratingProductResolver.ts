@@ -29,8 +29,10 @@ const mutations = {
   ) => {
     await prismaClient.ratingProduct.upsert({
       where: {
-        userId: ratingInput.userId,
-        productId: ratingInput.productId,
+        userId_productId: {
+          userId: ratingInput.userId,
+          productId: ratingInput.productId,
+        },
       },
       update: {
         score: ratingInput.score,

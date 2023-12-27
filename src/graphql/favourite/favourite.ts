@@ -26,11 +26,12 @@ export default class FavouriteProduct {
       }
 
       type FavouriteProduct {
-        id: String
         userId: String
         user: User
         productId: String
         product: Product
+        createdAt: String
+        updatedAt: String
       }
     `;
   }
