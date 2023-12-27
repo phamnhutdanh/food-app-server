@@ -163,7 +163,16 @@ const queries = {
   ) => {
     const aggregations = await prismaClient.ratingProduct.aggregate({
       where: {
-        productId: productId,
+        AND: [
+          {
+            productId: productId,
+          },
+          {
+            score: {
+              gte: 1,
+            },
+          },
+        ],
       },
       _avg: {
         score: true,
