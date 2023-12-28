@@ -40,13 +40,20 @@ enum ReportStatus {
   UN_READ
 }
 
+enum AccountStatus {
+  BANNED
+  NONE
+  WARNING
+}
+
 model Account {
-  id          String    @id @default(cuid())
-  email       String    @unique
-  role        UserRole? @default(USER)
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  id          String         @id @default(cuid())
+  email       String         @unique
+  role        UserRole?      @default(USER)
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
   firebaseUID String
+  status      AccountStatus? @default(NONE)
   //type              String
   //provider          String
   //providerAccountId String

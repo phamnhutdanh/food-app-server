@@ -1,3 +1,4 @@
+import { AccountStatus } from "@prisma/client";
 import { prismaClient } from "../../lib/db";
 
 enum UserRole {
@@ -75,6 +76,25 @@ const mutations = {
       .finally(() => {
         return userAccountID;
       });
+  },
+  changeStatusAccount: async (
+    _: any,
+    {
+      accountId,
+      status,
+    }: {
+      accountId: string;
+      status: AccountStatus;
+    }
+  ) => {
+    await prismaClient.account.update({
+      where: {
+        id: accountId,
+      },
+      data: {
+        status: status,
+      },
+    });
   },
 };
 

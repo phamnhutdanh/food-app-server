@@ -32,9 +32,18 @@ enum OrderStatus {
 }
 `;
 
+const ACCOUNT_STATUS = `#graphql
+enum AccountStatus {
+   BANNED
+   NONE
+   WARNING
+}
+`;
+
 export const typeDefs = `#graphql
    ${ROLE}
    ${ORDER_STATUS}
+   ${ACCOUNT_STATUS}
    ${UserAccount.typeDef()}
    ${User.typeDef()}
    ${Product.typeDef()}
