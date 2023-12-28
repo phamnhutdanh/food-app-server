@@ -4,7 +4,8 @@ import { reportAccountDetailResolver } from "./reportAccountDetailResolver";
 export default class ReportAccountDetail {
   static query() {
     return `#graphql
-     
+        getListAccountReport(accountId: String!): [ReportAccountDetail]
+        getReportDetails(id: String!): ReportAccountDetail
     `;
   }
   static mutation() {

@@ -5,11 +5,25 @@ import { getImageWithPublicIdCloudinary } from "../../lib/getImageWithPublicIdCl
 const queries = {
   getAllUsers: async () => {
     const users = await prismaClient.user.findMany({
+      where: {
+        NOT: [
+          {
+            account: {
+              role: "ADMIN",
+            },
+          },
+        ],
+      },
       include: {
         account: true,
+        shop: true,
+      },
+      orderBy: {
+        account: {
+          createdAt: "desc",
+        },
       },
     });
-    console.log(users);
     return users;
   },
   getUserById: async (_: any, { id }: { id: string }) => {
@@ -19,6 +33,7 @@ const queries = {
       },
       include: {
         account: true,
+        shop: true,
       },
     });
     return user;

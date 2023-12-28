@@ -4,7 +4,7 @@ import { reportAccountResolver } from "./reportAccountResolver";
 export default class ReportAccount {
   static query() {
     return `#graphql
-     
+      getListReportedAccount(accountId: String!): [ReportAccountDetail]
     `;
   }
   static mutation() {
@@ -21,6 +21,7 @@ export default class ReportAccount {
         accountReported: Account
         createdAt: String
         updatedAt: String
+        reportAccountDetail: ReportAccountDetail
       }
     `;
   }

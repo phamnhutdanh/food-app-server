@@ -29,13 +29,24 @@ enum OrderStatus {
   CANCELED
 }
 
+enum NotiStatus {
+  READ
+  UN_READ
+}
+
+enum ReportStatus {
+  DONE
+  READ
+  UN_READ
+}
+
 model Account {
-  id                  String                @id @default(cuid())
-  email               String                @unique
-  role                UserRole?             @default(USER)
-  createdAt           DateTime              @default(now())
-  updatedAt           DateTime              @updatedAt
-  firebaseUID         String
+  id          String    @id @default(cuid())
+  email       String    @unique
+  role        UserRole? @default(USER)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  firebaseUID String
   //type              String
   //provider          String
   //providerAccountId String
@@ -46,9 +57,10 @@ model Account {
   //scope             String?
   //id_token          String? @db.Text
   //session_state     String?
-  User                User[]
-  ReportAccount       ReportAccount[]
-  ReportAccountDetail ReportAccountDetail[]
+
+  reportAccount       ReportAccount[]
+  reportAccountDetail ReportAccountDetail[]
+  user                User?
 
   //@@unique([provider, providerAccountId])
   @@map("accounts")
@@ -64,7 +76,7 @@ model User {
   defaultAddress     String?   @default("")
   loginAs            UserRole? @default(USER)
 
-  accountId String
+  accountId String  @unique
   account   Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
 
   cart         Cart[]
@@ -72,12 +84,11 @@ model User {
 
   RatingShop RatingShop[]
 
-  Shop Shop[]
-
   OrderProduct        OrderProduct[]
   NotificationAccount NotificationAccount[]
   RatingProduct       RatingProduct[]
   FavouriteProduct    FavouriteProduct[]
+  shop                Shop?
 
   @@map("users")
 }
@@ -155,8 +166,8 @@ model Shop {
   shopName        String? @default("")
   imageUri        String? @default("")
 
-  userId String?
-  user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   ProductCategory     ProductCategory[]
   RatingShop          RatingShop[]
@@ -268,10 +279,12 @@ model ReportAccount {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  mark ReportStatus? @default(UN_READ)
+
   accountReportedId String
   accountReported   Account @relation(fields: [accountReportedId], references: [id])
 
-  ReportAccountDetail ReportAccountDetail[]
+  reportAccountDetail ReportAccountDetail?
 }
 
 model ReportAccountDetail {
@@ -283,7 +296,7 @@ model ReportAccountDetail {
 
   reporterId      String
   reporter        Account       @relation(fields: [reporterId], references: [id])
-  reportAccountId String
+  reportAccountId String        @unique
   reportAccount   ReportAccount @relation(fields: [reportAccountId], references: [id])
 }
 
@@ -307,10 +320,11 @@ model NotificationAccount {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  status   NotiStatus? @default(UN_READ)
   toUserId String?
-  user     User?   @relation(fields: [toUserId], references: [id], onDelete: Cascade)
+  user     User?       @relation(fields: [toUserId], references: [id], onDelete: Cascade)
   toShopId String?
-  shop     Shop?   @relation(fields: [toShopId], references: [id], onDelete: Cascade)
+  shop     Shop?       @relation(fields: [toShopId], references: [id], onDelete: Cascade)
 }
 
 // model Session {

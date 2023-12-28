@@ -3,14 +3,36 @@ import { getImageWithPublicIdCloudinary } from "../../lib/getImageWithPublicIdCl
 import { CreateShopAccountInputType, UpdateShopAccountInputType } from "./shop";
 
 const queries = {
-  getAllShop: async () => {},
+  getAllShop: async () => {
+    const shops = await prismaClient.shop.findMany({
+      include: {
+        user: {
+          include: {
+            account: true,
+          },
+        },
+      },
+      orderBy: {
+        user: {
+          account: {
+            createdAt: "desc",
+          },
+        },
+      },
+    });
+    return shops;
+  },
   getShopById: async (_: any, { id }: { id: string }) => {
     const shop = await prismaClient.shop.findUnique({
       where: {
         id: id,
       },
       include: {
-        user: true,
+        user: {
+          include: {
+            account: true,
+          },
+        },
       },
     });
     return shop;

@@ -16,6 +16,13 @@ const queries = {
       where: {
         id: id,
       },
+      include: {
+        user: {
+          include: {
+            shop: true,
+          },
+        },
+      },
     });
     return account;
   },

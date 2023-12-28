@@ -23,6 +23,9 @@ export default class UserAccount {
         createdAt: String
         updatedAt: String
         firebaseUID: String
+        reportAccount: [ReportAccount]
+        reportAccountDetail: [ReportAccountDetail]
+        user: User
       }
 
       type UserAccount {
