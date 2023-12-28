@@ -1,4 +1,5 @@
 import { prismaClient } from "../../lib/db";
+import { CreateTagInputType } from "./productTag";
 
 const queries = {
   getAllTags: async () => {
@@ -17,6 +18,22 @@ const queries = {
   },
 };
 
-const mutations = {};
+const mutations = {
+  createTag: async (
+    _: any,
+    {
+      tagInput,
+    }: {
+      tagInput: CreateTagInputType;
+    }
+  ) => {
+    await prismaClient.productTag.create({
+      data: {
+        title: tagInput.title,
+        productId: tagInput.productId,
+      },
+    });
+  },
+};
 
 export const productTagResolver = { queries, mutations };

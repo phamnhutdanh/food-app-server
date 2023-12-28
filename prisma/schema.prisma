@@ -67,13 +67,17 @@ model User {
   accountId String
   account   Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
 
-  cart             Cart[]
-  billingCards     BillingCard[]
-  orders           Order[]
-  RatingProduct    RatingProduct[]
-  RatingShop       RatingShop[]
-  FavouriteProduct FavouriteProduct[]
-  Shop             Shop[]
+  cart         Cart[]
+  billingCards BillingCard[]
+
+  RatingShop RatingShop[]
+
+  Shop Shop[]
+
+  OrderProduct        OrderProduct[]
+  NotificationAccount NotificationAccount[]
+  RatingProduct       RatingProduct[]
+  FavouriteProduct    FavouriteProduct[]
 
   @@map("users")
 }
@@ -119,41 +123,25 @@ model BillingCard {
   @@map("billingCards")
 }
 
-model Order {
-  id              String      @id @default(cuid())
+model OrderProduct {
+  id String @id @default(cuid())
+
+  fullPrice       Float
+  count           Int
   deliveryAddress String
-  // cutleryCount    Int            @default(0)
   totalCost       Float
   // productsCost    Float
   // deliveryCost         Float
   // serviceFee           Float
   status          OrderStatus @default(PENDING)
-  // recipientPhoneNumber String
-  // recipientName        String
   commentary      String?     @default("")
-  createdAt       DateTime    @default(now())
-  updatedAt       DateTime    @updatedAt
   deliveredAt     DateTime
 
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId String
-
-  products OrderProduct[]
-
-  @@map("orders")
-}
-
-model OrderProduct {
-  id        String   @id @default(cuid())
-  title     String?  @default("")
-  fullPrice Float
-  count     Int
-  imageUri  String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  orderId       String
-  order         Order       @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId        String
   productSizeId String
   productSize   ProductSize @relation(fields: [productSizeId], references: [id])
 
@@ -170,8 +158,9 @@ model Shop {
   userId String?
   user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  ProductCategory ProductCategory[]
-  RatingShop      RatingShop[]
+  ProductCategory     ProductCategory[]
+  RatingShop          RatingShop[]
+  NotificationAccount NotificationAccount[]
 
   @@map("shops")
 }
@@ -246,7 +235,6 @@ model ProductTag {
 }
 
 model RatingProduct {
-  id        String   @id @default(cuid())
   score     Int
   comment   String?  @default("")
   createdAt DateTime @default(now())
@@ -256,6 +244,9 @@ model RatingProduct {
   user      User    @relation(fields: [userId], references: [id])
   productId String
   product   Product @relation(fields: [productId], references: [id])
+
+  @@id([userId, productId])
+  @@unique([userId, productId])
 }
 
 model RatingShop {
@@ -277,8 +268,9 @@ model ReportAccount {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  reporterId          String
-  reporter            Account               @relation(fields: [reporterId], references: [id])
+  accountReportedId String
+  accountReported   Account @relation(fields: [accountReportedId], references: [id])
+
   ReportAccountDetail ReportAccountDetail[]
 }
 
@@ -289,18 +281,36 @@ model ReportAccountDetail {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  accountId       String
-  account         Account       @relation(fields: [accountId], references: [id])
+  reporterId      String
+  reporter        Account       @relation(fields: [reporterId], references: [id])
   reportAccountId String
   reportAccount   ReportAccount @relation(fields: [reportAccountId], references: [id])
 }
 
 model FavouriteProduct {
-  id        String  @id @default(cuid())
   userId    String
   user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   productId String
   product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@id([userId, productId])
+  @@unique([userId, productId])
+}
+
+model NotificationAccount {
+  id        String   @id @default(cuid())
+  title     String
+  message   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  toUserId String?
+  user     User?   @relation(fields: [toUserId], references: [id], onDelete: Cascade)
+  toShopId String?
+  shop     Shop?   @relation(fields: [toShopId], references: [id], onDelete: Cascade)
 }
 
 // model Session {

@@ -1,6 +1,12 @@
 import { RESOLVER_TYPE } from "../resolvers";
 import { productSizeResolver } from "./productSizeResolver";
 
+export type CreateSizeInputType = {
+  title: string;
+  productId: string;
+  fullPrice: number;
+};
+
 export default class ProductSize {
   static query() {
     return `#graphql
@@ -9,12 +15,18 @@ export default class ProductSize {
   }
   static mutation() {
     return `#graphql
-
+      createProductSize(sizeInput: createSizeInput!): ID
     `;
   }
 
   static typeDef() {
     return `#graphql
+     input createSizeInput {
+        title: String
+        fullPrice: Float
+        productId: String
+      }
+
       type ProductSize {
         id: String
         title: String

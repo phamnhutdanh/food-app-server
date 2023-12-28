@@ -1,6 +1,12 @@
 import { RESOLVER_TYPE } from "../resolvers";
 import { productSubCategoryResolver } from "./productSubCategoryResolver";
 
+export type CreateProductSubCategoryInputType = {
+  shopId: string;
+  title: string;
+  description: string;
+};
+
 export default class ProductSubCategory {
   static query() {
     return `#graphql
@@ -11,12 +17,18 @@ export default class ProductSubCategory {
   }
   static mutation() {
     return `#graphql
-
+      createProductSubCategory(subcategory: createProductSubCategoryInput!): ID 
     `;
   }
 
   static typeDef() {
     return `#graphql
+      input createProductSubCategoryInput {
+          shopId: String
+          title: String
+          description: String
+      }
+
       type ProductSubCategory {
         id: String
         title: String

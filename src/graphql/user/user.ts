@@ -12,6 +12,7 @@ export default class User {
   static mutation() {
     return `#graphql
         updateUser(userId: String!, name: String, phone: String, address: String, publicId: String): Boolean
+        updateLoginRole(userId: String!, role: Role): Boolean
     `;
   }
 
@@ -25,6 +26,7 @@ export default class User {
         backgroundImageUrl: String
         defaultAddress: String
         account: Account
+        loginAs: Role
       }
     `;
   }

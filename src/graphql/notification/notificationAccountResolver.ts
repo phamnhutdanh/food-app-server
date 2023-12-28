@@ -4,4 +4,4 @@ const queries = {};
 
 const mutations = {};
 
-export const orderResolver = { queries, mutations };
+export const notificationAccountResolver = { queries, mutations };

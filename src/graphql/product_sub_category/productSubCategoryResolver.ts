@@ -1,4 +1,5 @@
 import { prismaClient } from "../../lib/db";
+import { CreateProductSubCategoryInputType } from "./productSubCategory";
 
 const queries = {
   getAllProductSubCategories: async () => {
@@ -44,6 +45,31 @@ const queries = {
   },
 };
 
-const mutations = {};
+const mutations = {
+  createProductSubCategory: async (
+    _: any,
+    {
+      subcategory,
+    }: {
+      subcategory: CreateProductSubCategoryInputType;
+    }
+  ) => {
+    await prismaClient.productCategory
+      .findFirst({
+        where: {
+          shopId: subcategory.shopId,
+        },
+      })
+      .then(async (productCategory) => {
+        await prismaClient.productSubcategory.create({
+          data: {
+            title: subcategory.title,
+            description: subcategory.description,
+            categoryId: productCategory?.id!,
+          },
+        });
+      });
+  },
+};
 
 export const productSubCategoryResolver = { queries, mutations };

@@ -1,5 +1,6 @@
 import { prismaClient } from "../../lib/db";
-import { CreateShopAccountInputType } from "./shop";
+import { getImageWithPublicIdCloudinary } from "../../lib/getImageWithPublicIdCloudinary";
+import { CreateShopAccountInputType, UpdateShopAccountInputType } from "./shop";
 
 const queries = {
   getAllShop: async () => {},
@@ -14,6 +15,26 @@ const queries = {
     });
     return shop;
   },
+  getShopInfoByFirebaseUID: async (_: any, { id }: { id: string }) => {
+    const shop = await prismaClient.shop.findFirst({
+      where: {
+        user: {
+          account: {
+            firebaseUID: id,
+          },
+        },
+      },
+      include: {
+        user: {
+          include: {
+            account: true,
+          },
+        },
+      },
+    });
+
+    return shop;
+  },
 };
 
 const mutations = {
@@ -25,23 +46,140 @@ const mutations = {
       shop: CreateShopAccountInputType;
     }
   ) => {
-    await prismaClient.shop
-      .create({
+    if (shop.imageUri !== "" && shop.imageUri !== null) {
+      await getImageWithPublicIdCloudinary(shop.imageUri).then(
+        async (url: string) => {
+          console.log("URL: ", url);
+          await prismaClient.shop
+            .create({
+              data: {
+                shopName: shop.shopName,
+                shopAddress: shop.shopAddress,
+                shopPhoneNumber: shop.shopPhoneNumber,
+                imageUri: url,
+                userId: shop.userId,
+              },
+            })
+            .then(async (shopAccount) => {
+              await prismaClient.user
+                .update({
+                  where: {
+                    id: shop.userId,
+                  },
+                  data: {
+                    loginAs: "USER",
+                  },
+                })
+                .then(async (user: any) => {
+                  await prismaClient.account.update({
+                    where: {
+                      id: user.accountId,
+                    },
+                    data: {
+                      role: "SHOP_OWNER",
+                    },
+                  });
+                });
+
+              await prismaClient.productCategory.create({
+                data: {
+                  title: `category_${shopAccount.id}`,
+                  description: "description",
+                  shopId: shopAccount.id,
+                },
+              });
+            })
+            .catch((error) => {
+              const errorCode = error.code;
+              const errorMessage = error.message;
+              console.log("createShopAccount errorCode: ", errorCode);
+              console.log("createShopAccount errorMessage: ", errorMessage);
+            });
+        }
+      );
+    } else {
+      await prismaClient.shop
+        .create({
+          data: {
+            shopName: shop.shopName,
+            shopAddress: shop.shopAddress,
+            shopPhoneNumber: shop.shopPhoneNumber,
+            userId: shop.userId,
+          },
+        })
+        .then(async (shopAccount) => {
+          await prismaClient.user
+            .update({
+              where: {
+                id: shop.userId,
+              },
+              data: {
+                loginAs: "USER",
+              },
+            })
+            .then(async (user: any) => {
+              await prismaClient.account.update({
+                where: {
+                  id: user.accountId,
+                },
+                data: {
+                  role: "SHOP_OWNER",
+                },
+              });
+            });
+
+          await prismaClient.productCategory.create({
+            data: {
+              title: `category_${shopAccount.id}`,
+              description: "description",
+              shopId: shopAccount.id,
+            },
+          });
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          console.log("createShopAccount errorCode: ", errorCode);
+          console.log("createShopAccount errorMessage: ", errorMessage);
+        });
+    }
+  },
+  updateShopAccount: async (
+    _: any,
+    {
+      shop,
+    }: {
+      shop: UpdateShopAccountInputType;
+    }
+  ) => {
+    if (shop.imagePublicId !== "" && shop.imagePublicId !== null) {
+      await getImageWithPublicIdCloudinary(shop.imagePublicId).then(
+        async (url: string) => {
+          await prismaClient.shop.update({
+            where: {
+              id: shop.shopId,
+            },
+            data: {
+              shopName: shop.shopName,
+              shopPhoneNumber: shop.shopPhoneNumber,
+              shopAddress: shop.shopAddress,
+              imageUri: url,
+            },
+          });
+        }
+      );
+    } else {
+      await prismaClient.shop.update({
+        where: {
+          id: shop.shopId,
+        },
         data: {
           shopName: shop.shopName,
-          shopAddress: shop.shopAddress,
           shopPhoneNumber: shop.shopPhoneNumber,
-          imageUri: shop.imageUri,
-          userId: shop.userId,
+          shopAddress: shop.shopAddress,
         },
-      })
-      .then(() => {})
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.log("createShopAccount errorCode: ", errorCode);
-        console.log("createShopAccount errorMessage: ", errorMessage);
       });
+    }
   },
 };
 

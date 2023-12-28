@@ -5,6 +5,23 @@ export type TagSearchInputType = {
   title: string;
 };
 
+export type UpdateProductInputType = {
+  subcategoryId: string;
+  imagePublicId: string;
+  title: string;
+  description: string;
+  productId: string;
+};
+
+export type CreateProductInputType = {
+  subcategoryId: string;
+  imagePublicId: string;
+  title: string;
+  price: number;
+  sizeTitle: string;
+  description: string;
+};
+
 export default class Product {
   static query() {
     return `#graphql
@@ -14,17 +31,42 @@ export default class Product {
       getRecentProducts: [Product]
       getAllProductOfShop(id: ID!): [Product]
       searchProduct(text: String): [Product]
+      getAverageScore(productId: ID!): AggregateRatingProduct
     `;
   }
 
   static mutation() {
     return `#graphql
-
+      createProduct(productInput: createProductInput!): ID 
+      deleteProduct(productId: ID!): ID
+      updateProduct(productInput: updateProductInput!):ID
     `;
   }
 
   static typeDef() {
     return `#graphql
+      type AggregateRatingProduct {
+          avgRating: Float
+          countRating: Float
+      }
+
+      input updateProductInput {
+          subcategoryId: String
+          imagePublicId: String
+          title: String
+          description: String
+          productId: String
+      }
+
+      input createProductInput {
+          subcategoryId: String
+          imagePublicId: String
+          title: String
+          price: Float
+          sizeTitle: String
+          description: String
+      }
+    
       input tagSearchInput {
         title: String
       }
@@ -39,6 +81,7 @@ export default class Product {
         productSubcategory: ProductSubCategory
         ProductSize: [ProductSize]
         ProductTag: [ProductTag]
+        RatingProduct: [RatingProduct]
      }
     `;
   }

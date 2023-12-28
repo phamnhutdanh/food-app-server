@@ -1,61 +1,298 @@
+import { OrderStatus } from "@prisma/client";
 import { prismaClient } from "../../lib/db";
-import { OrderInputType } from "../order/order";
+
 import { OrderProductInputType } from "./orderProduct";
 
-const queries = {};
+const queries = {
+  getOnGoingOrdersOfUser: async (
+    _: any,
+    {
+      userId,
+    }: {
+      userId: string;
+    }
+  ) => {
+    const orders = await prismaClient.orderProduct.findMany({
+      where: {
+        AND: [
+          {
+            userId: userId,
+          },
+          {
+            OR: [
+              {
+                status: "PENDING",
+              },
+              {
+                status: "ON_THE_WAY",
+              },
+            ],
+          },
+        ],
+      },
+      include: {
+        productSize: {
+          include: {
+            product: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+    return orders;
+  },
+  getCompleteOrdersOfUser: async (
+    _: any,
+    {
+      userId,
+    }: {
+      userId: string;
+    }
+  ) => {
+    const orders = await prismaClient.orderProduct.findMany({
+      where: {
+        AND: [
+          {
+            userId: userId,
+          },
+          {
+            OR: [
+              {
+                status: "DELIVERED",
+              },
+              {
+                status: "CANCELED",
+              },
+            ],
+          },
+        ],
+      },
+      include: {
+        productSize: {
+          include: {
+            product: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+    return orders;
+  },
+  getOrderById: async (
+    _: any,
+    {
+      id,
+    }: {
+      id: string;
+    }
+  ) => {
+    const orderProduct = await prismaClient.orderProduct.findUnique({
+      where: {
+        id: id,
+      },
+      include: {
+        productSize: {
+          include: {
+            product: {
+              include: {
+                productSubcategory: {
+                  include: {
+                    productCategory: {
+                      include: {
+                        shop: true,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+        user: {
+          include: {
+            account: true,
+          },
+        },
+      },
+    });
+
+    return orderProduct;
+  },
+  getOnGoingOrdersOfShop: async (
+    _: any,
+    {
+      shopId,
+    }: {
+      shopId: string;
+    }
+  ) => {
+    const orders = await prismaClient.orderProduct.findMany({
+      where: {
+        AND: [
+          {
+            productSize: {
+              product: {
+                productSubcategory: {
+                  productCategory: {
+                    shopId: shopId,
+                  },
+                },
+              },
+            },
+          },
+          {
+            OR: [
+              {
+                status: "PENDING",
+              },
+              {
+                status: "ON_THE_WAY",
+              },
+            ],
+          },
+        ],
+      },
+      include: {
+        productSize: {
+          include: {
+            product: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+    return orders;
+  },
+  getCompleteOrdersOfShop: async (
+    _: any,
+    {
+      shopId,
+    }: {
+      shopId: string;
+    }
+  ) => {
+    const orders = await prismaClient.orderProduct.findMany({
+      where: {
+        AND: [
+          {
+            productSize: {
+              product: {
+                productSubcategory: {
+                  productCategory: {
+                    shopId: shopId,
+                  },
+                },
+              },
+            },
+          },
+          {
+            OR: [
+              {
+                status: "DELIVERED",
+              },
+              {
+                status: "CANCELED",
+              },
+            ],
+          },
+        ],
+      },
+      include: {
+        productSize: {
+          include: {
+            product: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+    return orders;
+  },
+};
 
 const mutations = {
   createOrderProduct: async (
     _: any,
     {
-      order,
       orderProducts,
     }: {
-      order: OrderInputType;
       orderProducts: OrderProductInputType[];
     }
   ) => {
-    await prismaClient.order
-      .create({
-        data: {
-          deliveredAt: order.deliveredAt,
-          deliveryAddress: order.deliveryAddress,
-          totalCost: order.totalCost,
-          status: "PENDING",
-          commentary: order.commentary,
-          userId: order.userId,
-        },
-      })
-      .then(async (order) => {
-        const orderId = order.id;
-        orderProducts.forEach(async (item) => {
-          await prismaClient.orderProduct
-            .create({
-              data: {
-                orderId: orderId,
-                fullPrice: item.fullPrice,
-                count: item.count,
-                productSizeId: item.productSizeId,
+    await orderProducts.forEach(async (orderProduct) => {
+      await prismaClient.cartProduct.deleteMany({
+        where: {
+          AND: [
+            {
+              productSizeId: orderProduct.productSizeId,
+            },
+            {
+              cart: {
+                userId: orderProduct.userId,
               },
-            })
-            .then(async (orderProduct) => {
-              await prismaClient.cartProduct.deleteMany({
-                where: {
-                  AND: [
-                    {
-                      productSizeId: orderProduct.productSizeId,
-                    },
-                    {
-                      cart: {
-                        userId: order.userId,
-                      },
-                    },
-                  ],
-                },
-              });
-            });
-        });
+            },
+          ],
+        },
       });
+
+      await prismaClient.orderProduct.create({
+        data: {
+          fullPrice: orderProduct.fullPrice,
+          count: orderProduct.count,
+          deliveryAddress: orderProduct.deliveryAddress,
+          totalCost: orderProduct.totalCost,
+          status: "PENDING",
+          commentary: orderProduct.commentary,
+          deliveredAt: orderProduct.deliveredAt,
+          userId: orderProduct.userId,
+          productSizeId: orderProduct.productSizeId,
+        },
+      });
+    });
+  },
+  cancelOrder: async (
+    _: any,
+    {
+      orderId,
+    }: {
+      orderId: string;
+    }
+  ) => {
+    await prismaClient.orderProduct.update({
+      where: {
+        id: orderId,
+      },
+      data: {
+        status: "CANCELED",
+      },
+    });
+  },
+  changeOrderStatus: async (
+    _: any,
+    {
+      orderId,
+      status,
+    }: {
+      orderId: string;
+      status: OrderStatus;
+    }
+  ) => {
+    await prismaClient.orderProduct.update({
+      where: {
+        id: orderId,
+      },
+      data: {
+        status: status,
+      },
+    });
   },
 };
 

@@ -9,16 +9,26 @@ export type CreateShopAccountInputType = {
   userId: string;
 };
 
+export type UpdateShopAccountInputType = {
+  shopAddress: string;
+  shopPhoneNumber: string;
+  shopName: string;
+  imagePublicId: string;
+  shopId: string;
+};
+
 export default class Shop {
   static query() {
     return `#graphql
       getAllShop: [Shop]
       getShopById(id: ID!): Shop
+      getShopInfoByFirebaseUID(id: ID!): Shop
     `;
   }
   static mutation() {
     return `#graphql
       createShopAccount(shop: createShopAccountInput!): ID 
+      updateShopAccount(shop: updateShopAccountInput): ID
     `;
   }
 
@@ -32,12 +42,21 @@ export default class Shop {
           userId: String
       }
 
+      input updateShopAccountInput {
+          shopAddress: String
+          shopPhoneNumber: String
+          shopName: String
+          imagePublicId: String
+          shopId: String!
+      }
+
       type Shop {
         id: String
         shopAddress: String
         shopPhoneNumber: String
         shopName: String
         imageUri: String
+        userId: String
         user: User
       }
     `;
