@@ -1,5 +1,6 @@
 import { ReportStatus } from "@prisma/client";
 import { prismaClient } from "../../lib/db";
+import { CreateReportInputType } from "./reportAccount";
 
 const queries = {
   getListReportedAccount: async (
@@ -42,6 +43,27 @@ const mutations = {
         mark: mark,
       },
     });
+  },
+  createReport: async (
+    _: any,
+    { reportInput }: { reportInput: CreateReportInputType }
+  ) => {
+    await prismaClient.reportAccount
+      .create({
+        data: {
+          accountReportedId: reportInput.accountReportedId,
+        },
+      })
+      .then(async (reportAccount) => {
+        await prismaClient.reportAccountDetail.create({
+          data: {
+            title: reportInput.title,
+            message: reportInput.message,
+            reportAccountId: reportAccount.id,
+            reporterId: reportInput.reporterId,
+          },
+        });
+      });
   },
 };
 

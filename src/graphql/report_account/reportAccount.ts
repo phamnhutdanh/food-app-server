@@ -1,6 +1,13 @@
 import { RESOLVER_TYPE } from "../resolvers";
 import { reportAccountResolver } from "./reportAccountResolver";
 
+export type CreateReportInputType = {
+  accountReportedId: string;
+  title: string;
+  message: string;
+  reporterId: string;
+};
+
 export default class ReportAccount {
   static query() {
     return `#graphql
@@ -10,11 +17,19 @@ export default class ReportAccount {
   static mutation() {
     return `#graphql
       changeMarkStatus(reportAccountId: ID!, mark: ReportStatus): Boolean
+      createReport(reportInput: createReportInput!): Boolean
     `;
   }
 
   static typeDef() {
     return `#graphql
+      input createReportInput {
+        accountReportedId: String
+        title: String
+        message: String
+        reporterId: String
+      }
+
       type ReportAccount {
         id: String
         accountReportedId: String
