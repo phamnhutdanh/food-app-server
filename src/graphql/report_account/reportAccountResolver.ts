@@ -12,7 +12,11 @@ const queries = {
           accountReportedId: accountId,
         },
         include: {
-          reportAccountDetail: true,
+          reportAccountDetail: {
+            include: {
+              reportAccount: true,
+            },
+          },
         },
         orderBy: {
           updatedAt: "desc",
