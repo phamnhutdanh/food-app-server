@@ -65,6 +65,9 @@ const queries = {
       orderBy: {
         updatedAt: "desc",
       },
+      include: {
+        reportAccount: true,
+      },
     });
 
     return reports;
