@@ -39,11 +39,27 @@ enum AccountStatus {
    WARNING
 }
 `;
+const REPORT_STATUS = `#graphql
+enum ReportStatus {
+  DONE
+  READ
+  UN_READ
+}
+`;
+
+const NOTI_STATUS = `#graphql
+enum NotiStatus {
+  READ
+  UN_READ
+}
+`;
 
 export const typeDefs = `#graphql
    ${ROLE}
    ${ORDER_STATUS}
    ${ACCOUNT_STATUS}
+   ${REPORT_STATUS}
+   ${NOTI_STATUS}
    ${UserAccount.typeDef()}
    ${User.typeDef()}
    ${Product.typeDef()}

@@ -1,3 +1,4 @@
+import { ReportStatus } from "@prisma/client";
 import { prismaClient } from "../../lib/db";
 
 const queries = {
@@ -24,6 +25,20 @@ const queries = {
   },
 };
 
-const mutations = {};
+const mutations = {
+  changeMarkStatus: async (
+    _: any,
+    { reportAccountId, mark }: { reportAccountId: string; mark: ReportStatus }
+  ) => {
+    await prismaClient.reportAccount.update({
+      where: {
+        id: reportAccountId,
+      },
+      data: {
+        mark: mark,
+      },
+    });
+  },
+};
 
 export const reportAccountResolver = { queries, mutations };

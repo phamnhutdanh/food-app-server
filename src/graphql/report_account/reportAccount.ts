@@ -9,7 +9,7 @@ export default class ReportAccount {
   }
   static mutation() {
     return `#graphql
-  
+      changeMarkStatus(reportAccountId: ID!, mark: ReportStatus): Boolean
     `;
   }
 
@@ -21,6 +21,7 @@ export default class ReportAccount {
         accountReported: Account
         createdAt: String
         updatedAt: String
+        mark: ReportStatus
         reportAccountDetail: ReportAccountDetail
       }
     `;

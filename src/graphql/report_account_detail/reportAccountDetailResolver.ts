@@ -1,3 +1,4 @@
+import { ReportStatus } from "@prisma/client";
 import { prismaClient } from "../../lib/db";
 
 const queries = {
@@ -47,6 +48,23 @@ const queries = {
     });
 
     return report;
+  },
+  getAllReportDetailListWithMarkStatus: async (
+    _: any,
+    { mark }: { mark: ReportStatus }
+  ) => {
+    const reports = await prismaClient.reportAccountDetail.findMany({
+      where: {
+        reportAccount: {
+          mark: mark,
+        },
+      },
+      orderBy: {
+        updatedAt: "desc",
+      },
+    });
+
+    return reports;
   },
 };
 

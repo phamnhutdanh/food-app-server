@@ -6,6 +6,7 @@ export default class ReportAccountDetail {
     return `#graphql
         getListAccountReport(accountId: String!): [ReportAccountDetail]
         getReportDetails(id: String!): ReportAccountDetail
+        getAllReportDetailListWithMarkStatus(mark: ReportStatus!): [ReportAccountDetail]
     `;
   }
   static mutation() {
