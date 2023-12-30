@@ -27,6 +27,7 @@ export default class NotificationAccount {
         user: User
         toShopId: String
         shop: Shop
+        status: NotiStatus
       }
     `;
   }
