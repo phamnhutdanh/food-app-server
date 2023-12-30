@@ -64,6 +64,32 @@ const mutations = {
           },
         });
       });
+
+    await prismaClient.user
+      .findFirst({
+        where: {
+          account: {
+            role: "ADMIN",
+          },
+        },
+      })
+      .then(async (user) => {
+        const title = "A new report has been created";
+        const reporter = prismaClient.account.findUnique({
+          where: {
+            id: reportInput.reporterId,
+          },
+        });
+
+        const message = `${reporter} has created a new report. Check it!`;
+        await prismaClient.notificationAccount.create({
+          data: {
+            title: title,
+            message: message,
+            toUserId: user?.id,
+          },
+        });
+      });
   },
 };
 

@@ -45,6 +45,42 @@ const mutations = {
         userId: ratingInput.userId,
       },
     });
+
+    await prismaClient.product
+      .findUnique({
+        where: {
+          id: ratingInput.productId,
+        },
+        include: {
+          productSubcategory: {
+            include: {
+              productCategory: {
+                include: {
+                  shop: true,
+                },
+              },
+            },
+          },
+        },
+      })
+      .then(async (product) => {
+        const user = await prismaClient.user.findUnique({
+          where: {
+            id: ratingInput.userId,
+          },
+        });
+        const shopId = product?.productSubcategory.productCategory.shop.id;
+        const title = "Your product has a new rating";
+        const message = `User ${user?.name} has created a rating on ${product?.title} with ${ratingInput.score} star!`;
+        await prismaClient.notificationAccount.create({
+          data: {
+            title: title,
+            message: message,
+            toShopId: shopId,
+          },
+        });
+        return product?.productSubcategory.productCategory.shop.id;
+      });
   },
 };
 
