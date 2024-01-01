@@ -22,6 +22,13 @@ export type CreateProductInputType = {
   description: string;
 };
 
+export type FilterProductInputType = {
+  text: string;
+  tagTitle: string;
+  minPrice: number;
+  maxPrice: number;
+};
+
 export default class Product {
   static query() {
     return `#graphql
@@ -31,6 +38,7 @@ export default class Product {
       getRecentProducts: [Product]
       getAllProductOfShop(id: ID!): [Product]
       searchProduct(text: String): [Product]
+      filterProduct(filterInput: filterProductInput!): [Product]
       getAverageScore(productId: ID!): AggregateRatingProduct
     `;
   }
@@ -45,6 +53,13 @@ export default class Product {
 
   static typeDef() {
     return `#graphql
+      input filterProductInput {
+        text: String
+        tagTitle: String
+        minPrice: Float
+        maxPrice: Float
+      }
+
       type AggregateRatingProduct {
           avgRating: Float
           countRating: Float
