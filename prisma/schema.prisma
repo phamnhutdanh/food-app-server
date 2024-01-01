@@ -89,8 +89,6 @@ model User {
   cart         Cart[]
   billingCards BillingCard[]
 
-  RatingShop RatingShop[]
-
   OrderProduct        OrderProduct[]
   NotificationAccount NotificationAccount[]
   RatingProduct       RatingProduct[]
@@ -177,7 +175,6 @@ model Shop {
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   ProductCategory     ProductCategory[]
-  RatingShop          RatingShop[]
   NotificationAccount NotificationAccount[]
 
   @@map("shops")
@@ -267,18 +264,18 @@ model RatingProduct {
   @@unique([userId, productId])
 }
 
-model RatingShop {
-  id        String   @id @default(cuid())
-  score     Int
-  comment   String?  @default("")
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+// model RatingShop {
+//   id        String   @id @default(cuid())
+//   score     Int
+//   comment   String?  @default("")
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
 
-  userId String
-  user   User   @relation(fields: [userId], references: [id])
-  shopId String
-  shop   Shop   @relation(fields: [shopId], references: [id])
-}
+//   userId String
+//   user   User   @relation(fields: [userId], references: [id])
+//   shopId String
+//   shop   Shop   @relation(fields: [shopId], references: [id])
+// }
 
 model ReportAccount {
   id String @id @default(cuid())

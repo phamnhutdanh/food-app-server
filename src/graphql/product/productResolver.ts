@@ -2,6 +2,7 @@ import { prismaClient } from "../../lib/db";
 import { getImageWithPublicIdCloudinary } from "../../lib/getImageWithPublicIdCloudinary";
 import {
   CreateProductInputType,
+  FilterProductInputType,
   TagSearchInputType,
   UpdateProductInputType,
 } from "./product";
@@ -186,6 +187,73 @@ const queries = {
       countRating: aggregations._count.score,
     };
     return res;
+  },
+  filterProduct: async (
+    _: any,
+    {
+      filterInput,
+    }: {
+      filterInput: FilterProductInputType;
+    }
+  ) => {
+    const products = await prismaClient.product.findMany({
+      where: {
+        OR: [
+          {
+            title: {
+              contains: filterInput.text,
+              mode: "insensitive",
+            },
+          },
+          {
+            ProductTag: {
+              some: {
+                title: filterInput.tagTitle,
+              },
+            },
+          },
+          {
+            ProductSize: {
+              some: {
+                AND: [
+                  {
+                    fullPrice: {
+                      gte: filterInput.minPrice,
+                    },
+                  },
+                  {
+                    fullPrice: {
+                      lte: filterInput.maxPrice,
+                    },
+                  },
+                ],
+              },
+            },
+          },
+        ],
+      },
+      include: {
+        productSubcategory: {
+          include: {
+            productCategory: {
+              include: {
+                shop: true,
+              },
+            },
+          },
+        },
+        ProductTag: true,
+        ProductSize: true,
+      },
+      orderBy: {
+        _relevance: {
+          fields: ["title"],
+          search: filterInput.text,
+          sort: "desc",
+        },
+      },
+    });
+    return products;
   },
 };
 
