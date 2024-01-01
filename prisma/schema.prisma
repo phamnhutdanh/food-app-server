@@ -119,7 +119,7 @@ model CartProduct {
   // weight             Float
   // tag                String
   productSizeId String
-  productSize   ProductSize @relation(fields: [productSizeId], references: [id])
+  productSize   ProductSize @relation(fields: [productSizeId], references: [id], onDelete: Cascade)
   cartId        String
   cart          Cart        @relation(fields: [cartId], references: [id], onDelete: Cascade)
 
@@ -161,7 +161,7 @@ model OrderProduct {
   user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId        String
   productSizeId String
-  productSize   ProductSize @relation(fields: [productSizeId], references: [id])
+  productSize   ProductSize @relation(fields: [productSizeId], references: [id], onDelete: Cascade)
 
   @@map("orderProducts")
 }
@@ -249,7 +249,7 @@ model ProductTag {
   title String
 
   productId String
-  product   Product @relation(fields: [productId], references: [id])
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 }
 
 model RatingProduct {
@@ -259,9 +259,9 @@ model RatingProduct {
   updatedAt DateTime @updatedAt
 
   userId    String
-  user      User    @relation(fields: [userId], references: [id])
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   productId String
-  product   Product @relation(fields: [productId], references: [id])
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 
   @@id([userId, productId])
   @@unique([userId, productId])
@@ -289,7 +289,7 @@ model ReportAccount {
   mark ReportStatus? @default(UN_READ)
 
   accountReportedId String
-  accountReported   Account @relation(fields: [accountReportedId], references: [id])
+  accountReported   Account @relation(fields: [accountReportedId], references: [id], onDelete: Cascade)
 
   reportAccountDetail ReportAccountDetail?
 }
@@ -302,9 +302,9 @@ model ReportAccountDetail {
   updatedAt DateTime @updatedAt
 
   reporterId      String
-  reporter        Account       @relation(fields: [reporterId], references: [id])
+  reporter        Account       @relation(fields: [reporterId], references: [id], onDelete: Cascade)
   reportAccountId String        @unique
-  reportAccount   ReportAccount @relation(fields: [reportAccountId], references: [id])
+  reportAccount   ReportAccount @relation(fields: [reportAccountId], references: [id], onDelete: Cascade)
 }
 
 model FavouriteProduct {

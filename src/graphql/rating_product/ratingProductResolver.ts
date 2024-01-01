@@ -27,24 +27,47 @@ const mutations = {
       ratingInput: CreateRatingProductInputType;
     }
   ) => {
-    await prismaClient.ratingProduct.upsert({
-      where: {
-        userId_productId: {
-          userId: ratingInput.userId,
-          productId: ratingInput.productId,
+    await prismaClient.ratingProduct
+      .upsert({
+        where: {
+          userId_productId: {
+            userId: ratingInput.userId,
+            productId: ratingInput.productId,
+          },
         },
-      },
-      update: {
-        score: ratingInput.score,
-        comment: ratingInput.comment,
-      },
-      create: {
-        score: ratingInput.score,
-        comment: ratingInput.comment,
-        productId: ratingInput.productId,
-        userId: ratingInput.userId,
-      },
-    });
+        update: {
+          score: ratingInput.score,
+          comment: ratingInput.comment,
+        },
+        create: {
+          score: ratingInput.score,
+          comment: ratingInput.comment,
+          productId: ratingInput.productId,
+          userId: ratingInput.userId,
+        },
+      })
+      .then(async (rating) => {
+        const avg = await prismaClient.ratingProduct
+          .aggregate({
+            _avg: {
+              score: true,
+            },
+            where: {
+              productId: rating.productId,
+            },
+          })
+          .then(async (avg) => {
+            return avg._avg.score;
+          });
+        await prismaClient.product.update({
+          where: {
+            id: rating.productId,
+          },
+          data: {
+            averageRatingScores: avg,
+          },
+        });
+      });
 
     await prismaClient.product
       .findUnique({
