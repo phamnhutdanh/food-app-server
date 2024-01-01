@@ -103,7 +103,11 @@ const queries = {
                   include: {
                     productCategory: {
                       include: {
-                        shop: true,
+                        shop: {
+                          include: {
+                            user: true,
+                          },
+                        },
                       },
                     },
                   },
