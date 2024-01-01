@@ -127,10 +127,21 @@ const queries = {
   ) => {
     const products = await prismaClient.product.findMany({
       where: {
-        title: {
-          contains: text,
-          mode: "insensitive",
-        },
+        OR: [
+          {
+            title: {
+              contains: text,
+              mode: "insensitive",
+            },
+          },
+          {
+            ProductTag: {
+              some: {
+                title: text,
+              },
+            },
+          },
+        ],
       },
       include: {
         productSubcategory: {
