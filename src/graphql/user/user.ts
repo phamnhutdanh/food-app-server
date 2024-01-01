@@ -27,6 +27,7 @@ export default class User {
         defaultAddress: String
         account: Account
         loginAs: Role
+        shop: Shop
       }
     `;
   }

@@ -11,6 +11,7 @@ export default class UserAccount {
   static mutation() {
     return `#graphql
       createUserAccount(email: String!, firebaseUID: String!): ID 
+      changeStatusAccount(accountId: ID!, status: AccountStatus!): ID
     `;
   }
 
@@ -23,6 +24,10 @@ export default class UserAccount {
         createdAt: String
         updatedAt: String
         firebaseUID: String
+        reportAccount: [ReportAccount]
+        reportAccountDetail: [ReportAccountDetail]
+        user: User
+        status: AccountStatus
       }
 
       type UserAccount {

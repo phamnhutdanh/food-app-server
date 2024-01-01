@@ -256,6 +256,61 @@ const mutations = {
           productSizeId: orderProduct.productSizeId,
         },
       });
+
+      await prismaClient.user
+        .findUnique({
+          where: {
+            id: orderProduct.userId,
+          },
+        })
+        .then(async (user) => {
+          await prismaClient.productSize
+            .findUnique({
+              where: {
+                id: orderProduct.productSizeId,
+              },
+              include: {
+                product: {
+                  include: {
+                    productSubcategory: {
+                      include: {
+                        productCategory: {
+                          include: {
+                            shop: true,
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            })
+            .then(async (productSize) => {
+              // create shop notify
+              const titleShop = `New order coming to you`;
+              const messageShop = `User ${user?.name} has ordered a ${productSize?.product.title} from your shop. Check it soon!`;
+              await prismaClient.notificationAccount.create({
+                data: {
+                  title: titleShop,
+                  message: messageShop,
+                  toShopId:
+                    productSize?.product.productSubcategory.productCategory.shop
+                      .id,
+                },
+              });
+
+              // create user notify
+              const titleUser = `Your order had been placed`;
+              const messageUser = `Your order ${productSize?.product.title} had been placed successful. Waiting for shop checking it!`;
+              await prismaClient.notificationAccount.create({
+                data: {
+                  title: titleUser,
+                  message: messageUser,
+                  toUserId: orderProduct.userId,
+                },
+              });
+            });
+        });
     });
   },
   cancelOrder: async (
@@ -266,14 +321,65 @@ const mutations = {
       orderId: string;
     }
   ) => {
-    await prismaClient.orderProduct.update({
-      where: {
-        id: orderId,
-      },
-      data: {
-        status: "CANCELED",
-      },
-    });
+    await prismaClient.orderProduct
+      .update({
+        where: {
+          id: orderId,
+        },
+        data: {
+          status: "CANCELED",
+        },
+        include: {
+          productSize: {
+            include: {
+              product: {
+                include: {
+                  productSubcategory: {
+                    include: {
+                      productCategory: {
+                        include: {
+                          shop: true,
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+          user: true,
+        },
+      })
+      .then(async (orderProduct) => {
+        const user = orderProduct.user;
+        const shop =
+          orderProduct.productSize.product.productSubcategory.productCategory
+            .shop;
+
+        const product = orderProduct.productSize.product;
+
+        // create shop notify
+        const titleShop = `Order canceled`;
+        const messageShop = `Order ${product.title} of ${user?.name} had been canceled!`;
+        await prismaClient.notificationAccount.create({
+          data: {
+            title: titleShop,
+            message: messageShop,
+            toShopId: shop.id,
+          },
+        });
+
+        // create user notify
+        const titleUser = `Order canceled`;
+        const messageUser = `Your order ${product.title} had been canceled!`;
+        await prismaClient.notificationAccount.create({
+          data: {
+            title: titleUser,
+            message: messageUser,
+            toUserId: user.id,
+          },
+        });
+      });
   },
   changeOrderStatus: async (
     _: any,
@@ -285,14 +391,75 @@ const mutations = {
       status: OrderStatus;
     }
   ) => {
-    await prismaClient.orderProduct.update({
-      where: {
-        id: orderId,
-      },
-      data: {
-        status: status,
-      },
-    });
+    await prismaClient.orderProduct
+      .update({
+        where: {
+          id: orderId,
+        },
+        data: {
+          status: status,
+        },
+        include: {
+          productSize: {
+            include: {
+              product: {
+                include: {
+                  productSubcategory: {
+                    include: {
+                      productCategory: {
+                        include: {
+                          shop: true,
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+          user: true,
+        },
+      })
+      .then(async (orderProduct) => {
+        const user = orderProduct.user;
+        const shop =
+          orderProduct.productSize.product.productSubcategory.productCategory
+            .shop;
+
+        const product = orderProduct.productSize.product;
+
+        let messageShop = "",
+          messageUser = "";
+
+        if (status === OrderStatus.ON_THE_WAY) {
+          messageUser = `Your order ${product.title} will coming to you soon!`;
+          messageShop = `Order ${product.title} of ${user?.name} had been accepted. Delivery to your customer as soon as possible!`;
+        }
+        if (status === OrderStatus.DELIVERED) {
+          messageUser = `Your order ${product.title} delivery successful. Rating this product to evaluate it!`;
+          messageShop = `Order ${product.title} of ${user?.name} delivered successful.`;
+        }
+
+        // create shop notify
+        const titleShop = `Order updated`;
+        await prismaClient.notificationAccount.create({
+          data: {
+            title: titleShop,
+            message: messageShop,
+            toShopId: shop.id,
+          },
+        });
+
+        // create user notify
+        const titleUser = `Order updated`;
+        await prismaClient.notificationAccount.create({
+          data: {
+            title: titleUser,
+            message: messageUser,
+            toUserId: user.id,
+          },
+        });
+      });
   },
 };
 

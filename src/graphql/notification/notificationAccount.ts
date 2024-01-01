@@ -4,12 +4,14 @@ import { notificationAccountResolver } from "./notificationAccountResolver";
 export default class NotificationAccount {
   static query() {
     return `#graphql
-     
+        getAllNotificationOfUser(userId: ID!, status: NotiStatus!): [NotificationAccount]
+        getAllNotificationOfShop(shopId: ID!, status: NotiStatus!): [NotificationAccount]
+        getAllNotificationOfAdmin(status: NotiStatus!): [NotificationAccount]
     `;
   }
   static mutation() {
     return `#graphql
-  
+        changeNotifyStatus(id: ID!, status: NotiStatus): Boolean
     `;
   }
 
@@ -25,6 +27,7 @@ export default class NotificationAccount {
         user: User
         toShopId: String
         shop: Shop
+        status: NotiStatus
       }
     `;
   }
