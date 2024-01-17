@@ -22,7 +22,11 @@ const queries = {
             product: true,
           },
         },
-        cartIngredientDetail: true,
+        cartIngredientDetail: {
+          include: {
+            productIngredient: true,
+          },
+        },
       },
     });
     console.log(cartProduct);
