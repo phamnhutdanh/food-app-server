@@ -77,7 +77,7 @@ model User {
   id                 String    @id @default(cuid())
   name               String?   @default(cuid())
   //reactCoinsCount    Int               @default(0)
-  phoneNumber        String?   @unique @default("")
+  phoneNumber        String?   @default("")
   imageUrl           String?
   backgroundImageUrl String?
   defaultAddress     String?   @default("")

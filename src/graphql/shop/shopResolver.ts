@@ -1,6 +1,10 @@
 import { prismaClient } from "../../lib/db";
 import { getImageWithPublicIdCloudinary } from "../../lib/getImageWithPublicIdCloudinary";
-import { CreateShopAccountInputType, UpdateShopAccountInputType } from "./shop";
+import {
+  CreateShopAccountInputType,
+  UpdateShopAccountInputType,
+  UpdateShopAccountWithImageInputType,
+} from "./shop";
 
 const queries = {
   getAllShop: async () => {
@@ -190,6 +194,39 @@ const mutations = {
           });
         }
       );
+    } else {
+      await prismaClient.shop.update({
+        where: {
+          id: shop.shopId,
+        },
+        data: {
+          shopName: shop.shopName,
+          shopPhoneNumber: shop.shopPhoneNumber,
+          shopAddress: shop.shopAddress,
+        },
+      });
+    }
+  },
+  updateShopWithImage: async (
+    _: any,
+    {
+      shop,
+    }: {
+      shop: UpdateShopAccountWithImageInputType;
+    }
+  ) => {
+    if (shop.imageUri !== "" && shop.imageUri !== null) {
+      await prismaClient.shop.update({
+        where: {
+          id: shop.shopId,
+        },
+        data: {
+          shopName: shop.shopName,
+          shopPhoneNumber: shop.shopPhoneNumber,
+          shopAddress: shop.shopAddress,
+          imageUri: shop.imageUri,
+        },
+      });
     } else {
       await prismaClient.shop.update({
         where: {

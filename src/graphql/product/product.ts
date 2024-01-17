@@ -13,6 +13,23 @@ export type UpdateProductInputType = {
   productId: string;
 };
 
+export type UpdateProductWithImageInputType = {
+  subcategoryId: string;
+  imageUri: string;
+  title: string;
+  description: string;
+  productId: string;
+};
+
+export type CreateProductWithImageInputType = {
+  subcategoryId: string;
+  imageUri: string;
+  title: string;
+  price: number;
+  sizeTitle: string;
+  description: string;
+};
+
 export type CreateProductInputType = {
   subcategoryId: string;
   imagePublicId: string;
@@ -48,6 +65,8 @@ export default class Product {
       createProduct(productInput: createProductInput!): ID 
       deleteProduct(productId: ID!): ID
       updateProduct(productInput: updateProductInput!):ID
+      createProductWithImage(productInput: createProductWithImageInput!): ID 
+      updateProductWithImage(productInput: updateProductWithImageInput!):ID
     `;
   }
 
@@ -65,12 +84,30 @@ export default class Product {
           countRating: Float
       }
 
+      input updateProductWithImageInput {
+          subcategoryId: String
+          imageUri: String
+          title: String
+          description: String
+          productId: String
+      }
+
       input updateProductInput {
           subcategoryId: String
           imagePublicId: String
           title: String
           description: String
           productId: String
+      }
+
+      
+    input createProductWithImageInput {
+          subcategoryId: String
+          imageUri: String
+          title: String
+          price: Float
+          sizeTitle: String
+          description: String
       }
 
       input createProductInput {
