@@ -81,6 +81,37 @@ const mutations = {
                 });
               });
             }
+          })
+          .then(async () => {
+            const ingredientCost = await prismaClient.cartProduct
+              .findUnique({
+                where: {
+                  id: cartProductId,
+                },
+                include: {
+                  cartIngredientDetail: {
+                    include: {
+                      productIngredient: true,
+                    },
+                  },
+                },
+              })
+              .then(async (cartProduct) => {
+                let res = 0;
+                cartProduct?.cartIngredientDetail.forEach((item) => {
+                  res = res + item.productIngredient.price;
+                });
+                return res;
+              });
+
+            await prismaClient.cartProduct.update({
+              where: {
+                id: cartProductId,
+              },
+              data: {
+                fullPrice: ingredientCost + fullPrice,
+              },
+            });
           });
       })
       .catch((error) => {
