@@ -58,6 +58,7 @@ export default class OrderProduct {
         productSize: ProductSize
         userId: String
         user: User
+        orderIngredientDetail: [OrderIngredientDetail]
      }
     `;
   }

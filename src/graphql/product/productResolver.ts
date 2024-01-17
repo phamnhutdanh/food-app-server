@@ -44,6 +44,7 @@ const queries = {
             },
           },
         },
+        productIngredients: true,
       },
     });
     return product;

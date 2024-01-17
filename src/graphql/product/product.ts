@@ -134,6 +134,7 @@ export default class Product {
         ProductSize: [ProductSize]
         ProductTag: [ProductTag]
         RatingProduct: [RatingProduct]
+        productIngredients: [ProductIngredients]
      }
     `;
   }
