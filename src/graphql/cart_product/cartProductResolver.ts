@@ -1,4 +1,5 @@
 import { prismaClient } from "../../lib/db";
+import { CartIngredientsInputType } from "./cartProduct";
 
 const queries = {
   getAllCartProductOfUser: async (
@@ -36,11 +37,13 @@ const mutations = {
       userId,
       amount,
       fullPrice,
+      listIngredients,
     }: {
       productSizeId: string;
       userId: string;
       amount: number;
       fullPrice: number;
+      listIngredients: CartIngredientsInputType[];
     }
   ) => {
     let cartProductId = "";
@@ -61,8 +64,18 @@ const mutations = {
               fullPrice: fullPrice,
             },
           })
-          .then((cartProduct) => {
+          .then(async (cartProduct) => {
             cartProductId = cartProduct.id;
+            if (listIngredients.length > 0) {
+              listIngredients.forEach(async (ingredient) => {
+                await prismaClient.cartIngredientDetail.create({
+                  data: {
+                    cartProductId: cartProduct.id,
+                    productIngredientID: ingredient.id,
+                  },
+                });
+              });
+            }
           });
       })
       .catch((error) => {

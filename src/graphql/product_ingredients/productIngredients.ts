@@ -54,6 +54,14 @@ export default class ProductIngredients {
         orderProduct: OrderProduct
       }
 
+    type CartIngredientDetail {
+        id: String
+        title: String
+        productIngredientID: String
+        productIngredient: ProductIngredients
+        cartProductId: String
+        cartProduct: CartProduct
+      }
 
       type ProductIngredients {
         id: String
