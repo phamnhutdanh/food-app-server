@@ -2,6 +2,7 @@ import { prismaClient } from "../../lib/db";
 import { getImageWithPublicIdCloudinary } from "../../lib/getImageWithPublicIdCloudinary";
 import {
   CreateShopAccountInputType,
+  CreateShopAccountWithImageInputType,
   UpdateShopAccountInputType,
   UpdateShopAccountWithImageInputType,
 } from "./shop";
@@ -123,6 +124,107 @@ const mutations = {
             });
         }
       );
+    } else {
+      await prismaClient.shop
+        .create({
+          data: {
+            shopName: shop.shopName,
+            shopAddress: shop.shopAddress,
+            shopPhoneNumber: shop.shopPhoneNumber,
+            userId: shop.userId,
+          },
+        })
+        .then(async (shopAccount) => {
+          await prismaClient.user
+            .update({
+              where: {
+                id: shop.userId,
+              },
+              data: {
+                loginAs: "USER",
+              },
+            })
+            .then(async (user: any) => {
+              await prismaClient.account.update({
+                where: {
+                  id: user.accountId,
+                },
+                data: {
+                  role: "SHOP_OWNER",
+                },
+              });
+            });
+
+          await prismaClient.productCategory.create({
+            data: {
+              title: `category_${shopAccount.id}`,
+              description: "description",
+              shopId: shopAccount.id,
+            },
+          });
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          console.log("createShopAccount errorCode: ", errorCode);
+          console.log("createShopAccount errorMessage: ", errorMessage);
+        });
+    }
+  },
+  createShopAccountWithImage: async (
+    _: any,
+    {
+      shop,
+    }: {
+      shop: CreateShopAccountWithImageInputType;
+    }
+  ) => {
+    if (shop.imageUri !== "" && shop.imageUri !== null) {
+      await prismaClient.shop
+        .create({
+          data: {
+            shopName: shop.shopName,
+            shopAddress: shop.shopAddress,
+            shopPhoneNumber: shop.shopPhoneNumber,
+            imageUri: shop.imageUri,
+            userId: shop.userId,
+          },
+        })
+        .then(async (shopAccount) => {
+          await prismaClient.user
+            .update({
+              where: {
+                id: shop.userId,
+              },
+              data: {
+                loginAs: "USER",
+              },
+            })
+            .then(async (user: any) => {
+              await prismaClient.account.update({
+                where: {
+                  id: user.accountId,
+                },
+                data: {
+                  role: "SHOP_OWNER",
+                },
+              });
+            });
+
+          await prismaClient.productCategory.create({
+            data: {
+              title: `category_${shopAccount.id}`,
+              description: "description",
+              shopId: shopAccount.id,
+            },
+          });
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          console.log("createShopAccount errorCode: ", errorCode);
+          console.log("createShopAccount errorMessage: ", errorMessage);
+        });
     } else {
       await prismaClient.shop
         .create({
