@@ -22,6 +22,7 @@ const queries = {
             product: true,
           },
         },
+        cartIngredientDetail: true,
       },
     });
     console.log(cartProduct);
