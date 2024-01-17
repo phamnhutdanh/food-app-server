@@ -32,16 +32,31 @@ const mutations = {
       productIngredientsInput: UpdateProductIngredientsInputType;
     }
   ) => {
-    await prismaClient.productIngredients.update({
-      where: {
-        id: productIngredientsInput.id,
-      },
-      data: {
-        name: productIngredientsInput.name,
-        price: productIngredientsInput.price,
-        imageUri: productIngredientsInput.imageUri,
-      },
-    });
+    if (
+      productIngredientsInput.imageUri !== "" &&
+      productIngredientsInput.imageUri !== null
+    ) {
+      await prismaClient.productIngredients.update({
+        where: {
+          id: productIngredientsInput.id,
+        },
+        data: {
+          name: productIngredientsInput.name,
+          price: productIngredientsInput.price,
+          imageUri: productIngredientsInput.imageUri,
+        },
+      });
+    } else {
+      await prismaClient.productIngredients.update({
+        where: {
+          id: productIngredientsInput.id,
+        },
+        data: {
+          name: productIngredientsInput.name,
+          price: productIngredientsInput.price,
+        },
+      });
+    }
   },
 };
 
