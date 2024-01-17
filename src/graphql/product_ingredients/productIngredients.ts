@@ -8,6 +8,13 @@ export type AddProductIngredientsInputType = {
   productId: string;
 };
 
+export type UpdateProductIngredientsInputType = {
+  name: string;
+  imageUri: string;
+  price: number;
+  id: string;
+};
+
 export default class ProductIngredients {
   static query() {
     return `#graphql
@@ -17,11 +24,20 @@ export default class ProductIngredients {
   static mutation() {
     return `#graphql
         addProductIngredients(productIngredientsInput: addProductIngredientsInput!): ID 
+        updateProductIngredients(productIngredientsInput: updateProductIngredientsInput!): ID 
     `;
   }
 
   static typeDef() {
     return `#graphql
+
+    input updateProductIngredientsInput {
+        name: String
+        imageUri: String
+        price: Float
+        id: String
+    }
+
     input addProductIngredientsInput {
         name: String
         imageUri: String
