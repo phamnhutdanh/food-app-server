@@ -233,22 +233,20 @@ const mutations = {
     _: any,
     {
       orderProducts,
-      listIngredients,
     }: {
       orderProducts: OrderProductInputType[];
-      listIngredients: CartIngredientsInputType[];
     }
   ) => {
-    await orderProducts.forEach(async (orderProduct) => {
+    await orderProducts.forEach(async (item) => {
       await prismaClient.cartProduct.deleteMany({
         where: {
           AND: [
             {
-              productSizeId: orderProduct.productSizeId,
+              productSizeId: item.productSizeId,
             },
             {
               cart: {
-                userId: orderProduct.userId,
+                userId: item.userId,
               },
             },
           ],
@@ -258,41 +256,39 @@ const mutations = {
       await prismaClient.orderProduct
         .create({
           data: {
-            fullPrice: orderProduct.fullPrice,
-            count: orderProduct.count,
-            deliveryAddress: orderProduct.deliveryAddress,
-            totalCost: orderProduct.totalCost,
+            fullPrice: item.fullPrice,
+            count: item.count,
+            deliveryAddress: item.deliveryAddress,
+            totalCost: item.totalCost,
             status: "PENDING",
-            commentary: orderProduct.commentary,
-            deliveredAt: orderProduct.deliveredAt,
-            userId: orderProduct.userId,
-            productSizeId: orderProduct.productSizeId,
+            commentary: item.commentary,
+            deliveredAt: item.deliveredAt,
+            userId: item.userId,
+            productSizeId: item.productSizeId,
           },
         })
         .then(async (orderProduct) => {
-          if (listIngredients.length > 0) {
-            listIngredients.forEach(async (ingredient) => {
-              await prismaClient.orderIngredientDetail.create({
-                data: {
-                  orderProductId: orderProduct.id,
-                  productIngredientID: ingredient.id,
-                },
-              });
+          item.listIngredients.forEach(async (item) => {
+            await prismaClient.orderIngredientDetail.create({
+              data: {
+                orderProductId: orderProduct.id,
+                productIngredientID: item.id,
+              },
             });
-          }
+          });
         });
 
       await prismaClient.user
         .findUnique({
           where: {
-            id: orderProduct.userId,
+            id: item.userId,
           },
         })
         .then(async (user) => {
           await prismaClient.productSize
             .findUnique({
               where: {
-                id: orderProduct.productSizeId,
+                id: item.productSizeId,
               },
               include: {
                 product: {
@@ -331,7 +327,7 @@ const mutations = {
                 data: {
                   title: titleUser,
                   message: messageUser,
-                  toUserId: orderProduct.userId,
+                  toUserId: item.userId,
                 },
               });
             });
