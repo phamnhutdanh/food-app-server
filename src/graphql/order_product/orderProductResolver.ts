@@ -2,6 +2,7 @@ import { OrderStatus } from "@prisma/client";
 import { prismaClient } from "../../lib/db";
 
 import { OrderProductInputType } from "./orderProduct";
+import { CartIngredientsInputType } from "../cart_product/cartProduct";
 
 const queries = {
   getOnGoingOrdersOfUser: async (
@@ -121,6 +122,11 @@ const queries = {
             account: true,
           },
         },
+        orderIngredientDetail: {
+          include: {
+            productIngredient: true,
+          },
+        },
       },
     });
 
@@ -227,8 +233,10 @@ const mutations = {
     _: any,
     {
       orderProducts,
+      listIngredients,
     }: {
       orderProducts: OrderProductInputType[];
+      listIngredients: CartIngredientsInputType[];
     }
   ) => {
     await orderProducts.forEach(async (orderProduct) => {
@@ -247,19 +255,32 @@ const mutations = {
         },
       });
 
-      await prismaClient.orderProduct.create({
-        data: {
-          fullPrice: orderProduct.fullPrice,
-          count: orderProduct.count,
-          deliveryAddress: orderProduct.deliveryAddress,
-          totalCost: orderProduct.totalCost,
-          status: "PENDING",
-          commentary: orderProduct.commentary,
-          deliveredAt: orderProduct.deliveredAt,
-          userId: orderProduct.userId,
-          productSizeId: orderProduct.productSizeId,
-        },
-      });
+      await prismaClient.orderProduct
+        .create({
+          data: {
+            fullPrice: orderProduct.fullPrice,
+            count: orderProduct.count,
+            deliveryAddress: orderProduct.deliveryAddress,
+            totalCost: orderProduct.totalCost,
+            status: "PENDING",
+            commentary: orderProduct.commentary,
+            deliveredAt: orderProduct.deliveredAt,
+            userId: orderProduct.userId,
+            productSizeId: orderProduct.productSizeId,
+          },
+        })
+        .then(async (orderProduct) => {
+          if (listIngredients.length > 0) {
+            listIngredients.forEach(async (ingredient) => {
+              await prismaClient.orderIngredientDetail.create({
+                data: {
+                  orderProductId: orderProduct.id,
+                  productIngredientID: ingredient.id,
+                },
+              });
+            });
+          }
+        });
 
       await prismaClient.user
         .findUnique({
