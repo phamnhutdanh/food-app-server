@@ -2,7 +2,6 @@ import { OrderStatus } from "@prisma/client";
 import { prismaClient } from "../../lib/db";
 
 import { OrderProductInputType } from "./orderProduct";
-import { CartIngredientsInputType } from "../cart_product/cartProduct";
 
 const queries = {
   getOnGoingOrdersOfUser: async (
@@ -35,6 +34,11 @@ const queries = {
         productSize: {
           include: {
             product: true,
+          },
+        },
+        orderIngredientDetail: {
+          include: {
+            productIngredient: true,
           },
         },
       },
@@ -74,6 +78,11 @@ const queries = {
         productSize: {
           include: {
             product: true,
+          },
+        },
+        orderIngredientDetail: {
+          include: {
+            productIngredient: true,
           },
         },
       },
@@ -172,6 +181,11 @@ const queries = {
             product: true,
           },
         },
+        orderIngredientDetail: {
+          include: {
+            productIngredient: true,
+          },
+        },
       },
       orderBy: {
         createdAt: "desc",
@@ -217,6 +231,11 @@ const queries = {
         productSize: {
           include: {
             product: true,
+          },
+        },
+        orderIngredientDetail: {
+          include: {
+            productIngredient: true,
           },
         },
       },
