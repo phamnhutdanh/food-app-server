@@ -2,9 +2,11 @@ import { prismaClient } from "../../lib/db";
 import { getImageWithPublicIdCloudinary } from "../../lib/getImageWithPublicIdCloudinary";
 import {
   CreateProductInputType,
+  CreateProductWithImageInputType,
   FilterProductInputType,
   TagSearchInputType,
   UpdateProductInputType,
+  UpdateProductWithImageInputType,
 } from "./product";
 
 const queries = {
@@ -42,6 +44,7 @@ const queries = {
             },
           },
         },
+        productIngredients: true,
       },
     });
     return product;
@@ -307,6 +310,40 @@ const mutations = {
       }
     );
   },
+  createProductWithImage: async (
+    _: any,
+    {
+      productInput,
+    }: {
+      productInput: CreateProductWithImageInputType;
+    }
+  ) => {
+    await prismaClient.product
+      .create({
+        data: {
+          title: productInput.title,
+          imageUri: productInput.imageUri,
+          fullPrice: productInput.price,
+          description: productInput.description,
+          subcategoryId: productInput.subcategoryId,
+        },
+      })
+      .then(async (product) => {
+        await prismaClient.productSize.create({
+          data: {
+            title: productInput.sizeTitle,
+            fullPrice: productInput.price,
+            productId: product.id,
+          },
+        });
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log("createProduct errorCode: ", errorCode);
+        console.log("createProduct errorMessage: ", errorMessage);
+      });
+  },
   deleteProduct: async (
     _: any,
     {
@@ -348,6 +385,39 @@ const mutations = {
           });
         }
       );
+    } else {
+      await prismaClient.product.update({
+        where: {
+          id: productInput.productId,
+        },
+        data: {
+          subcategoryId: productInput.subcategoryId,
+          title: productInput.title,
+          description: productInput.description,
+        },
+      });
+    }
+  },
+  updateProductWithImage: async (
+    _: any,
+    {
+      productInput,
+    }: {
+      productInput: UpdateProductWithImageInputType;
+    }
+  ) => {
+    if (productInput.imageUri !== "" && productInput.imageUri !== null) {
+      await prismaClient.product.update({
+        where: {
+          id: productInput.productId,
+        },
+        data: {
+          subcategoryId: productInput.subcategoryId,
+          imageUri: productInput.imageUri,
+          title: productInput.title,
+          description: productInput.description,
+        },
+      });
     } else {
       await prismaClient.product.update({
         where: {

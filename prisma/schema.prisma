@@ -77,7 +77,7 @@ model User {
   id                 String    @id @default(cuid())
   name               String?   @default(cuid())
   //reactCoinsCount    Int               @default(0)
-  phoneNumber        String?   @unique @default("")
+  phoneNumber        String?   @default("")
   imageUrl           String?
   backgroundImageUrl String?
   defaultAddress     String?   @default("")
@@ -109,19 +109,29 @@ model Cart {
 }
 
 model CartProduct {
-  id            String      @id @default(cuid())
-  title         String?     @default("")
-  amount        Int?        @default(1)
-  fullPrice     Float?      @default(0)
+  id                   String                 @id @default(cuid())
+  title                String?                @default("")
+  amount               Int?                   @default(1)
+  fullPrice            Float?                 @default(0)
   // discountPercent    Int     @default(0)
   // weight             Float
   // tag                String
-  productSizeId String
-  productSize   ProductSize @relation(fields: [productSizeId], references: [id], onDelete: Cascade)
-  cartId        String
-  cart          Cart        @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  productSizeId        String
+  productSize          ProductSize            @relation(fields: [productSizeId], references: [id], onDelete: Cascade)
+  cartId               String
+  cart                 Cart                   @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  cartIngredientDetail CartIngredientDetail[]
 
   @@map("cartProducts")
+}
+
+model CartIngredientDetail {
+  id                  String             @id @default(cuid())
+  title               String?            @default("")
+  productIngredientID String
+  productIngredient   ProductIngredients @relation(fields: [productIngredientID], references: [id], onDelete: Cascade)
+  cartProductId       String
+  cartProduct         CartProduct        @relation(fields: [cartProductId], references: [id], onDelete: Cascade)
 }
 
 model BillingCard {
@@ -156,12 +166,22 @@ model OrderProduct {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId        String
-  productSizeId String
-  productSize   ProductSize @relation(fields: [productSizeId], references: [id], onDelete: Cascade)
+  user                  User                    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId                String
+  productSizeId         String
+  productSize           ProductSize             @relation(fields: [productSizeId], references: [id], onDelete: Cascade)
+  orderIngredientDetail OrderIngredientDetail[]
 
   @@map("orderProducts")
+}
+
+model OrderIngredientDetail {
+  id                  String             @id @default(cuid())
+  title               String?            @default("")
+  productIngredientID String
+  productIngredient   ProductIngredients @relation(fields: [productIngredientID], references: [id], onDelete: Cascade)
+  orderProductId      String
+  orderProduct        OrderProduct       @relation(fields: [orderProductId], references: [id], onDelete: Cascade)
 }
 
 model Shop {
@@ -222,12 +242,24 @@ model Product {
   subcategoryId      String
   productSubcategory ProductSubcategory @relation(fields: [subcategoryId], references: [id], onDelete: Cascade)
 
-  ProductTag       ProductTag[]
-  ProductSize      ProductSize[]
-  RatingProduct    RatingProduct[]
-  FavouriteProduct FavouriteProduct[]
+  ProductTag         ProductTag[]
+  ProductSize        ProductSize[]
+  RatingProduct      RatingProduct[]
+  FavouriteProduct   FavouriteProduct[]
+  productIngredients ProductIngredients[]
 
   @@map("products")
+}
+
+model ProductIngredients {
+  id                    String                  @id @default(cuid())
+  name                  String
+  imageUri              String
+  price                 Float
+  productId             String
+  product               Product                 @relation(fields: [productId], references: [id], onDelete: Cascade)
+  OrderIngredientDetail OrderIngredientDetail[]
+  CartIngredientDetail  CartIngredientDetail[]
 }
 
 model ProductSize {

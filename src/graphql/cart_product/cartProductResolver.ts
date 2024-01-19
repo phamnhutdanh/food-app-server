@@ -1,4 +1,5 @@
 import { prismaClient } from "../../lib/db";
+import { CartIngredientsInputType } from "./cartProduct";
 
 const queries = {
   getAllCartProductOfUser: async (
@@ -21,6 +22,11 @@ const queries = {
             product: true,
           },
         },
+        cartIngredientDetail: {
+          include: {
+            productIngredient: true,
+          },
+        },
       },
     });
     console.log(cartProduct);
@@ -36,11 +42,13 @@ const mutations = {
       userId,
       amount,
       fullPrice,
+      listIngredients,
     }: {
       productSizeId: string;
       userId: string;
       amount: number;
       fullPrice: number;
+      listIngredients: CartIngredientsInputType[];
     }
   ) => {
     let cartProductId = "";
@@ -61,8 +69,49 @@ const mutations = {
               fullPrice: fullPrice,
             },
           })
-          .then((cartProduct) => {
+          .then(async (cartProduct) => {
             cartProductId = cartProduct.id;
+            if (listIngredients.length > 0) {
+              listIngredients.forEach(async (ingredient) => {
+                await prismaClient.cartIngredientDetail.create({
+                  data: {
+                    cartProductId: cartProduct.id,
+                    productIngredientID: ingredient.id,
+                  },
+                });
+              });
+            }
+          })
+          .then(async () => {
+            const ingredientCost = await prismaClient.cartProduct
+              .findUnique({
+                where: {
+                  id: cartProductId,
+                },
+                include: {
+                  cartIngredientDetail: {
+                    include: {
+                      productIngredient: true,
+                    },
+                  },
+                },
+              })
+              .then(async (cartProduct) => {
+                let res = 0;
+                cartProduct?.cartIngredientDetail.forEach((item) => {
+                  res = res + item.productIngredient.price;
+                });
+                return res;
+              });
+
+            await prismaClient.cartProduct.update({
+              where: {
+                id: cartProductId,
+              },
+              data: {
+                fullPrice: ingredientCost + fullPrice,
+              },
+            });
           });
       })
       .catch((error) => {

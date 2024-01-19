@@ -100,6 +100,47 @@ const mutations = {
       });
     }
   },
+  updateUserWithImage: async (
+    _: any,
+    {
+      userId,
+      name,
+      phone,
+      address,
+      imageUri,
+    }: {
+      userId: string;
+      name: string;
+      phone: string;
+      address: string;
+      imageUri: string;
+    }
+  ) => {
+    if (imageUri !== "" && imageUri !== null) {
+      await prismaClient.user.update({
+        where: {
+          id: userId,
+        },
+        data: {
+          name: name,
+          phoneNumber: phone,
+          defaultAddress: address,
+          imageUrl: imageUri,
+        },
+      });
+    } else {
+      await prismaClient.user.update({
+        where: {
+          id: userId,
+        },
+        data: {
+          name: name,
+          phoneNumber: phone,
+          defaultAddress: address,
+        },
+      });
+    }
+  },
   updateLoginRole: async (
     _: any,
     {

@@ -5,6 +5,7 @@ import NotificationAccount from "./notification/notificationAccount";
 import OrderProduct from "./order_product/orderProduct";
 import Product from "./product/product";
 import ProductCategory from "./product_category/productCategory";
+import ProductIngredients from "./product_ingredients/productIngredients";
 import ProductSize from "./product_size/productSize";
 import ProductSubCategory from "./product_sub_category/productSubCategory";
 import ProductTag from "./product_tag/productTag";
@@ -76,6 +77,7 @@ export const typeDefs = `#graphql
    ${ReportAccount.typeDef()}
    ${ReportAccountDetail.typeDef()}
    ${NotificationAccount.typeDef()}
+   ${ProductIngredients.typeDef()}
    type ID {
       id: String
    }
@@ -97,6 +99,8 @@ export const typeDefs = `#graphql
       ${ReportAccount.query()}
       ${ReportAccountDetail.query()}
       ${NotificationAccount.query()}
+      ${ProductIngredients.query()}
+
    }
 
    type Mutation {
@@ -116,5 +120,7 @@ export const typeDefs = `#graphql
        ${ReportAccount.mutation()}
        ${ReportAccountDetail.mutation()}
        ${NotificationAccount.mutation()}
+      ${ProductIngredients.mutation()}
+
    }           
 `;

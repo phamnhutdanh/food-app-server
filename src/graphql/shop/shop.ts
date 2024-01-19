@@ -9,11 +9,27 @@ export type CreateShopAccountInputType = {
   userId: string;
 };
 
+export type CreateShopAccountWithImageInputType = {
+  shopAddress: string;
+  shopPhoneNumber: string;
+  shopName: string;
+  imageUri: string;
+  userId: string;
+};
+
 export type UpdateShopAccountInputType = {
   shopAddress: string;
   shopPhoneNumber: string;
   shopName: string;
   imagePublicId: string;
+  shopId: string;
+};
+
+export type UpdateShopAccountWithImageInputType = {
+  shopAddress: string;
+  shopPhoneNumber: string;
+  shopName: string;
+  imageUri: string;
   shopId: string;
 };
 
@@ -29,6 +45,8 @@ export default class Shop {
     return `#graphql
       createShopAccount(shop: createShopAccountInput!): ID 
       updateShopAccount(shop: updateShopAccountInput): ID
+      createShopAccountWithImage(shop: createShopAccountWithImageInput!): ID 
+      updateShopWithImage(shop: updateShopAccountWithImageInput): ID
     `;
   }
 
@@ -42,11 +60,27 @@ export default class Shop {
           userId: String
       }
 
+      input createShopAccountWithImageInput {
+          shopAddress: String
+          shopPhoneNumber: String
+          shopName: String
+          imageUri: String
+          userId: String
+      }
+
       input updateShopAccountInput {
           shopAddress: String
           shopPhoneNumber: String
           shopName: String
           imagePublicId: String
+          shopId: String!
+      }
+
+      input updateShopAccountWithImageInput {
+          shopAddress: String
+          shopPhoneNumber: String
+          shopName: String
+          imageUri: String
           shopId: String!
       }
 

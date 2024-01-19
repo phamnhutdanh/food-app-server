@@ -1,3 +1,4 @@
+import { CartIngredientsInputType } from "../cart_product/cartProduct";
 import { RESOLVER_TYPE } from "../resolvers";
 import { orderProductResolver } from "./orderProductResolver";
 
@@ -10,6 +11,7 @@ export type OrderProductInputType = {
   deliveredAt: string;
   userId: string;
   productSizeId: string;
+  listIngredients: CartIngredientsInputType[];
 };
 
 export default class OrderProduct {
@@ -41,6 +43,7 @@ export default class OrderProduct {
           deliveredAt: String
           userId: String
           productSizeId: String
+          listIngredients: [cartIngredientsInput]
       }
 
       type OrderProduct {
@@ -58,6 +61,7 @@ export default class OrderProduct {
         productSize: ProductSize
         userId: String
         user: User
+        orderIngredientDetail: [OrderIngredientDetail]
      }
     `;
   }

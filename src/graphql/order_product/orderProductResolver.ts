@@ -36,6 +36,11 @@ const queries = {
             product: true,
           },
         },
+        orderIngredientDetail: {
+          include: {
+            productIngredient: true,
+          },
+        },
       },
       orderBy: {
         createdAt: "desc",
@@ -73,6 +78,11 @@ const queries = {
         productSize: {
           include: {
             product: true,
+          },
+        },
+        orderIngredientDetail: {
+          include: {
+            productIngredient: true,
           },
         },
       },
@@ -121,6 +131,11 @@ const queries = {
             account: true,
           },
         },
+        orderIngredientDetail: {
+          include: {
+            productIngredient: true,
+          },
+        },
       },
     });
 
@@ -164,6 +179,11 @@ const queries = {
         productSize: {
           include: {
             product: true,
+          },
+        },
+        orderIngredientDetail: {
+          include: {
+            productIngredient: true,
           },
         },
       },
@@ -213,6 +233,11 @@ const queries = {
             product: true,
           },
         },
+        orderIngredientDetail: {
+          include: {
+            productIngredient: true,
+          },
+        },
       },
       orderBy: {
         createdAt: "desc",
@@ -231,47 +256,58 @@ const mutations = {
       orderProducts: OrderProductInputType[];
     }
   ) => {
-    await orderProducts.forEach(async (orderProduct) => {
+    await orderProducts.forEach(async (item) => {
       await prismaClient.cartProduct.deleteMany({
         where: {
           AND: [
             {
-              productSizeId: orderProduct.productSizeId,
+              productSizeId: item.productSizeId,
             },
             {
               cart: {
-                userId: orderProduct.userId,
+                userId: item.userId,
               },
             },
           ],
         },
       });
 
-      await prismaClient.orderProduct.create({
-        data: {
-          fullPrice: orderProduct.fullPrice,
-          count: orderProduct.count,
-          deliveryAddress: orderProduct.deliveryAddress,
-          totalCost: orderProduct.totalCost,
-          status: "PENDING",
-          commentary: orderProduct.commentary,
-          deliveredAt: orderProduct.deliveredAt,
-          userId: orderProduct.userId,
-          productSizeId: orderProduct.productSizeId,
-        },
-      });
+      await prismaClient.orderProduct
+        .create({
+          data: {
+            fullPrice: item.fullPrice,
+            count: item.count,
+            deliveryAddress: item.deliveryAddress,
+            totalCost: item.totalCost,
+            status: "PENDING",
+            commentary: item.commentary,
+            deliveredAt: item.deliveredAt,
+            userId: item.userId,
+            productSizeId: item.productSizeId,
+          },
+        })
+        .then(async (orderProduct) => {
+          item.listIngredients.forEach(async (item) => {
+            await prismaClient.orderIngredientDetail.create({
+              data: {
+                orderProductId: orderProduct.id,
+                productIngredientID: item.id,
+              },
+            });
+          });
+        });
 
       await prismaClient.user
         .findUnique({
           where: {
-            id: orderProduct.userId,
+            id: item.userId,
           },
         })
         .then(async (user) => {
           await prismaClient.productSize
             .findUnique({
               where: {
-                id: orderProduct.productSizeId,
+                id: item.productSizeId,
               },
               include: {
                 product: {
@@ -310,7 +346,7 @@ const mutations = {
                 data: {
                   title: titleUser,
                   message: messageUser,
-                  toUserId: orderProduct.userId,
+                  toUserId: item.userId,
                 },
               });
             });

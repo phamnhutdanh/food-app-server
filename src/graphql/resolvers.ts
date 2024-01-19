@@ -6,6 +6,7 @@ import NotificationAccount from "./notification/notificationAccount";
 import OrderProduct from "./order_product/orderProduct";
 import Product from "./product/product";
 import ProductCategory from "./product_category/productCategory";
+import ProductIngredients from "./product_ingredients/productIngredients";
 import ProductSize from "./product_size/productSize";
 import ProductSubCategory from "./product_sub_category/productSubCategory";
 import ProductTag from "./product_tag/productTag";
@@ -39,6 +40,7 @@ export const resolvers = {
     ...ReportAccount.resolver(RESOLVER_TYPE.Query),
     ...ReportAccountDetail.resolver(RESOLVER_TYPE.Query),
     ...NotificationAccount.resolver(RESOLVER_TYPE.Query),
+    ...ProductIngredients.resolver(RESOLVER_TYPE.Query),
   },
   Mutation: {
     ...UserAccount.resolver(RESOLVER_TYPE.Mutation),
@@ -57,5 +59,6 @@ export const resolvers = {
     ...ReportAccount.resolver(RESOLVER_TYPE.Mutation),
     ...ReportAccountDetail.resolver(RESOLVER_TYPE.Mutation),
     ...NotificationAccount.resolver(RESOLVER_TYPE.Mutation),
+    ...ProductIngredients.resolver(RESOLVER_TYPE.Mutation),
   },
 };
